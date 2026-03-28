@@ -309,8 +309,7 @@ export function renderTwPricingSection(pricing: PricingTier[] | undefined, ctaUr
     const hl = tier.highlight;
     return `<div class="reveal${hl ? ' relative pt-5' : ''}" style="--i:${i}">
       ${hl ? `<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-accent text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-accent/30 whitespace-nowrap">Most Popular</div>` : ''}
-      <div class="relative${hl ? ' pricing-highlight' : ''} bg-surface rounded-2xl p-8 border ${hl ? 'border-accent/60' : 'border-gray-100'} flex flex-col h-full">
-        ${hl ? `<div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-accent to-accent/60 rounded-t-2xl"></div>` : ''}
+      <div class="relative${hl ? ' pricing-highlight' : ''} bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col h-full">
         <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">${escapeHtml(tier.tier)}</div>
         <div class="flex items-baseline gap-1 mb-7">
           ${tier.unit ? `<span class="text-base text-gray-400 font-medium">${escapeHtml(tier.unit)}</span>` : ''}
