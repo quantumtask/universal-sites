@@ -9,7 +9,7 @@ const ROOT = path.resolve(__dirname, '..');
 const DATA = path.join(ROOT, 'client-data');
 
 app.use(express.json({ limit: '20mb' }));
-app.use(express.static(__dirname));
+app.use(express.static(path.join(ROOT, 'admin')));
 // Serve generated site assets so uploaded images preview correctly in the admin
 app.use('/site-assets', express.static(path.join(ROOT, 'generated-sites')));
 
