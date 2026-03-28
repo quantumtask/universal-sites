@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60">
+  <!-- Leaf mark: two leaf halves forming a G shape -->
+  <path d="M12 44 C12 44 10 28 18 18 C24 10 34 8 40 14 C34 14 26 18 22 28 C18 38 20 46 28 46 C36 46 42 38 40 30 L32 30"
+        fill="none" stroke="#2d5a27" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Stem -->
+  <line x1="20" y1="46" x2="20" y2="52" stroke="#2d5a27" stroke-width="3" stroke-linecap="round"/>
+  <!-- Leaf accent -->
+  <path d="M26 22 C30 18 36 20 36 26 C32 24 28 26 26 22z" fill="#8bc34a" opacity="0.8"/>
+  <!-- Wordmark -->
+  <text x="54" y="24" font-family="'Segoe UI',Arial,sans-serif" font-weight="900" font-size="16" fill="#2d5a27" letter-spacing="-0.4">GREEN</text>
+  <text x="54" y="40" font-family="'Segoe UI',Arial,sans-serif" font-weight="900" font-size="16" fill="#5a9e4f" letter-spacing="-0.4">EDGE</text>
+  <text x="54" y="54" font-family="'Segoe UI',Arial,sans-serif" font-weight="700" font-size="7" fill="#8bc34a" letter-spacing="1.5">EDINBURGH · LANDSCAPERS</text>
+</svg>

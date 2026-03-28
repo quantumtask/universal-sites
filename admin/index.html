@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Editor</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sb:#0f172a;--sb-hover:rgba(255,255,255,.06);--sb-active:#1d4ed8;
+  --bg:#f1f5f9;--card:#fff;--border:#e2e8f0;
+  --text:#0f172a;--muted:#64748b;
+  --accent:#6366f1;--green:#10b981;--red:#ef4444;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+a{color:inherit;text-decoration:none}
+
+/* Layout */
+.layout{display:flex;height:100vh;overflow:hidden}
+aside{width:240px;min-width:240px;background:var(--sb);display:flex;flex-direction:column;overflow:hidden}
+main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+
+/* Sidebar */
+.sb-top{padding:18px 14px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:10px}
+.sb-logo{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.site-list{flex:1;overflow-y:auto;padding:6px}
+.site-item{padding:9px 11px;border-radius:8px;cursor:pointer;color:#94a3b8;font-size:13px;font-weight:500;transition:.15s;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:8px;user-select:none}
+.site-item:hover{background:var(--sb-hover);color:#fff}
+.site-item.active{background:var(--sb-active);color:#fff}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;flex-shrink:0}
+.site-item.active .dot{opacity:1;background:#93c5fd}
+.sb-footer{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07)}
+.sb-footer small{color:#475569;font-size:11px}
+
+/* Empty state */
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);padding:40px;text-align:center}
+.empty-icon{font-size:52px}
+.empty h2{font-size:20px;color:var(--text)}
+
+/* Editor */
+.editor{display:flex;flex-direction:column;min-height:100%}
+.ed-header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.ed-name{font-size:16px;font-weight:700}
+.ed-id{font-size:11px;color:var(--muted);font-family:monospace;margin-top:2px}
+.ed-actions{display:flex;gap:8px}
+
+/* Tabs */
+.tab-bar{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;display:flex;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:11px 14px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:.15s;font-family:var(--font)}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Tab body */
+.tab-body{flex:1;padding:24px;max-width:1100px}
+
+/* Cards */
+.card{background:var(--card);border-radius:12px;padding:22px;border:1px solid var(--border);margin-bottom:16px}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid.g1{grid-template-columns:1fr}
+.grid.g3{grid-template-columns:1fr 1fr 1fr}
+
+/* Form */
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.fg small{font-size:11px;color:#94a3b8}
+.fg input,.fg textarea,.fg select{padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--font);color:var(--text);background:var(--bg);transition:border-color .15s;width:100%}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--accent);background:#fff}
+.fg input[readonly]{color:var(--muted);background:#f8fafc;cursor:default}
+.fg textarea{resize:vertical;min-height:72px}
+
+/* Colour picker */
+.color-row{display:flex;align-items:center;gap:10px}
+.swatch{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);overflow:hidden;flex-shrink:0;cursor:pointer;position:relative}
+.swatch input[type=color]{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);border:none;padding:0;cursor:pointer;opacity:0}
+.swatch-fill{position:absolute;inset:0;border-radius:7px;pointer-events:none}
+.color-hex{flex:1;font-family:monospace!important}
+.color-hint{font-size:11px;color:#94a3b8;margin-top:3px}
+
+/* Image preview */
+.img-prev{width:100%;height:110px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block;margin-top:8px}
+.img-placeholder{width:100%;height:110px;border:1.5px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);margin-top:8px}
+
+/* List items */
+.li{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.li-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.li-title{font-size:13px;font-weight:600}
+.li-body{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.li-body.g1{grid-template-columns:1fr}
+
+/* Buttons */
+.btn{padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:.15s;font-family:var(--font);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.btn-new{background:rgba(255,255,255,.1);color:#fff;width:100%;justify-content:center}
+.btn-new:hover{background:rgba(255,255,255,.16)}
+.btn-save{background:var(--green);color:#fff}
+.btn-save:hover{filter:brightness(1.08)}
+.btn-gen{background:var(--accent);color:#fff;min-width:130px;justify-content:center}
+.btn-gen:hover{filter:brightness(1.08)}
+.btn-gen:disabled{opacity:.6;cursor:default;filter:none}
+.btn-ghost{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--border)}
+.btn-del{background:var(--red);color:#fff;font-size:11px;padding:5px 10px;border-radius:6px}
+.btn-add{background:transparent;color:var(--accent);border:1.5px dashed currentColor;width:100%;justify-content:center;padding:9px;border-radius:8px;margin-top:4px}
+.btn-add:hover{background:rgba(99,102,241,.06)}
+
+/* Presets */
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.preset-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;display:block;width:100%}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(4px)}
+.modal{background:#fff;border-radius:16px;padding:30px;width:420px;max-width:calc(100vw - 32px);box-shadow:0 25px 60px rgba(0,0,0,.2)}
+.modal h2{font-size:19px;margin-bottom:18px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+
+/* Toast */
+.toast{position:fixed;bottom:22px;right:22px;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:600;color:#fff;z-index:200;opacity:0;transform:translateY(6px);transition:.2s;pointer-events:none;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:var(--green)}
+.toast.err{background:var(--red)}
+.toast.info{background:var(--accent)}
+
+code{font-size:12px;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-family:monospace}
+
+/* Upload row */
+.img-row{display:flex;gap:8px;align-items:flex-start}
+.img-row input{flex:1}
+.btn-upload{background:var(--bg);color:var(--muted);border:1px solid var(--border);font-size:18px;padding:6px 10px;border-radius:8px;cursor:pointer;flex-shrink:0;transition:.15s;line-height:1}
+.btn-upload:hover{background:var(--border);color:var(--text)}
+.upload-hint{font-size:11px;color:#94a3b8;margin-top:3px}
+
+/* Niche picker */
+.niche-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:4px}
+.niche-card{border-radius:10px;padding:14px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;border:2px solid transparent;transition:.15s;position:relative;min-height:88px;justify-content:center;user-select:none}
+.niche-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.niche-card.selected{border-color:rgba(255,255,255,.9);box-shadow:0 0 0 3px var(--accent),0 6px 20px rgba(0,0,0,.25)}
+.niche-icon{font-size:26px;line-height:1}
+.niche-name{font-size:10.5px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5);letter-spacing:-.01em;line-height:1.25}
+.niche-check{position:absolute;top:6px;right:8px;font-size:13px;color:#fff;opacity:0;transition:.15s}
+.niche-card.selected .niche-check{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="sb-top">
+      <div class="sb-logo">⚡ Site Editor</div>
+      <button class="btn btn-new" onclick="showModal()">+ New Site</button>
+    </div>
+    <div class="site-list" id="siteList"></div>
+    <div class="sb-footer"><small>Edit JSON → Generate → Deploy</small></div>
+  </aside>
+
+  <!-- Main -->
+  <main id="main">
+    <div class="empty" id="emptyState">
+      <div class="empty-icon">📋</div>
+      <h2>Select a site to edit</h2>
+      <p>Choose from the list on the left, or create a new site.</p>
+    </div>
+
+    <div class="editor" id="editor" style="display:none">
+      <div class="ed-header">
+        <div>
+          <div class="ed-name" id="edName"></div>
+          <div class="ed-id" id="edId"></div>
+        </div>
+        <div class="ed-actions">
+          <button class="btn btn-save" onclick="save()">💾 Save</button>
+          <button class="btn btn-gen" id="genBtn" onclick="generate()">⚡ Generate Site</button>
+        </div>
+      </div>
+      <div class="tab-bar" id="tabBar"></div>
+      <div class="tab-body" id="tabBody"></div>
+    </div>
+  </main>
+</div>
+
+<!-- New Site Modal -->
+<div class="overlay" id="modal" style="display:none" onclick="if(event.target===this)hideModal()">
+  <div class="modal">
+    <h2>Create New Site</h2>
+    <div class="fg">
+      <label>Site ID</label>
+      <input id="newId" type="text" placeholder="e.g. rapid-clean-glasgow"
+             oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')"
+             onkeydown="if(event.key==='Enter')createSite();if(event.key==='Escape')hideModal()">
+      <small>Lowercase letters, numbers and hyphens only — this becomes the folder name</small>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="hideModal()">Cancel</button>
+      <button class="btn btn-save" onclick="createSite()">Create Site</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ── State ─────────────────────────────────────────── */
+let sites = [], currentId = null, data = {}, activeTab = 'identity';
+
+const TABS = [
+  {id:'identity', label:'🏢 Identity'},
+  {id:'content',  label:'📝 Content'},
+  {id:'theme',    label:'🎨 Theme'},
+  {id:'images',   label:'🖼 Images'},
+  {id:'services', label:'🔧 Services'},
+  {id:'reviews',  label:'⭐ Reviews'},
+  {id:'faqs',     label:'❓ FAQs'},
+  {id:'standards',label:'✅ Standards'},
+  {id:'ctas',     label:'🎯 CTAs'},
+  {id:'pricing',  label:'💰 Pricing'},
+  {id:'gallery',  label:'🖼 Gallery'},
+  {id:'meta',     label:'🔍 SEO'},
+];
+
+/* ── Niche presets ─────────────────────────────────── */
+// Each preset has unique per-section images: banner (hero), about_main, about_side, form_bg, footer_bg
+const U = (id, w=1920) => `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format`;
+const NICHE_PRESETS = [
+  { name:'Emergency Plumbing', icon:'🔧',
+    grad:'linear-gradient(135deg,#0e3d60 0%,#1978a8 100%)',
+    theme:{primary:'#0e3d60',secondary:'#1978a8',accent:'#fca311',background:'#eff7fc',text:'#0a2850',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1558618666-fcd25c85cd64'),           // plumber repairing under sink
+      about_main: U('photo-1504328345606-18bbc8c9d7d1',900),    // bathroom pipe interior
+      about_side: U('photo-1585771724684-38269d6639fd',400),    // boiler / copper pipes close-up
+      form_bg:    U('photo-1518199266791-5375a83190b7'),         // burst pipe water flood
+      footer_bg:  U('photo-1516455590571-18256e5bb9ff'),         // dark industrial pipework
+    }},
+  { name:'Commercial Cleaning', icon:'✨',
+    grad:'linear-gradient(135deg,#1a3a2a 0%,#2d6a4f 100%)',
+    theme:{primary:'#1a3a2a',secondary:'#2d6a4f',accent:'#95d44a',background:'#f2f8f4',text:'#112219',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1581578731548-c64695cc6952'),         // cleaner mopping bright office
+      about_main: U('photo-1556909114-f6e7ad7d3136',900),       // cleaning team in uniform
+      about_side: U('photo-1527515637462-cff94abb9f66',400),    // spray bottle and supplies
+      form_bg:    U('photo-1563453392212-326f5e854473'),         // pristine white tiled space
+      footer_bg:  U('photo-1600585154340-be6161a56a0c'),         // clean modern interior wide
+    }},
+  { name:'Electrical Services', icon:'⚡',
+    grad:'linear-gradient(135deg,#1c2340 0%,#3a4a80 100%)',
+    theme:{primary:'#1c2340',secondary:'#3a4a80',accent:'#f0c020',background:'#f5f6fc',text:'#111830',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1621905251918-48416bd8575a'),         // electrician working at fuse board
+      about_main: U('photo-1581092918056-0c4c3acd3789',900),    // engineer with hard hat / tools
+      about_side: U('photo-1509390144018-eebc9b991a55',400),    // power socket / wiring detail
+      form_bg:    U('photo-1473341304170-971dccb5ac1e'),         // city skyline at night / lit
+      footer_bg:  U('photo-1461749280684-dccba630e2f6'),         // dark circuit board / data
+    }},
+  { name:'Landscaping', icon:'🌿',
+    grad:'linear-gradient(135deg,#1b3a1b 0%,#3a7a3a 100%)',
+    theme:{primary:'#1b3a1b',secondary:'#3a7a3a',accent:'#8dcc4a',background:'#f3f9f0',text:'#102010',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1416879595882-3373a0480b5b'),         // lush formal garden wide
+      about_main: U('photo-1590682680695-43b964a3ae17',900),    // groundskeeper mowing lawn
+      about_side: U('photo-1558904541-efa843a96f01',400),       // pruning shears / garden tools
+      form_bg:    U('photo-1501854140801-50d01698950b'),         // peaceful meadow / green field
+      footer_bg:  U('photo-1464822759023-fed622ff2c3b'),         // misty forest path
+    }},
+  { name:'Roofing', icon:'🏠',
+    grad:'linear-gradient(135deg,#1e1e1e 0%,#555555 100%)',
+    theme:{primary:'#1e1e1e',secondary:'#444444',accent:'#e8a020',background:'#f5f5f5',text:'#111111',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1632778149955-e80f8ceca2e8'),         // roofer laying tiles high-up
+      about_main: U('photo-1504307651254-35680f356dfd',900),    // suburban roofline / house exterior
+      about_side: U('photo-1611348586840-ea9b7a35b4f9',400),    // slate / clay roof tile detail
+      form_bg:    U('photo-1562155618-e1a8a5196da0'),            // aerial rooftop terrace view
+      footer_bg:  U('photo-1570129477492-45c003edd2be'),         // dark dramatic house exterior
+    }},
+  { name:'Heating & HVAC', icon:'🔥',
+    grad:'linear-gradient(135deg,#7b1d1d 0%,#c0392b 100%)',
+    theme:{primary:'#7b1d1d',secondary:'#c0392b',accent:'#e8c96a',background:'#fdf5f5',text:'#4a0e0e',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1585771724684-38269d6639fd'),         // gas boiler / copper pipework
+      about_main: U('photo-1581092918056-0c4c3acd3789',900),    // engineer servicing boiler unit
+      about_side: U('photo-1567016432779-094069958ea5',400),    // radiator close-up / heating
+      form_bg:    U('photo-1554792759-2e97aabc0e2e'),            // cosy warm living room fire
+      footer_bg:  U('photo-1522771739844-6a9f6d5f14af'),         // fireplace / warm atmospheric
+    }},
+  { name:'Locksmith', icon:'🔑',
+    grad:'linear-gradient(135deg,#0c0f1e 0%,#1e293b 100%)',
+    theme:{primary:'#0c0f1e',secondary:'#1e293b',accent:'#818cf8',background:'#f8faff',text:'#0c0f1e',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1558618047-3c8c76ca7d13'),            // locksmith picking a lock
+      about_main: U('photo-1573883431205-98b5f10aaedb',900),    // security technician at door
+      about_side: U('photo-1516452391242-9b70efc9b9e2',400),    // bunch of brass keys close-up
+      form_bg:    U('photo-1582139329536-e7284fece509'),          // dark moody door entrance
+      footer_bg:  U('photo-1483683804023-6ccdb62f86ef'),          // dark architectural entrance
+    }},
+  { name:'Hair & Beauty', icon:'💇',
+    grad:'linear-gradient(135deg,#4a1540 0%,#9b3080 100%)',
+    theme:{primary:'#4a1540',secondary:'#9b3080',accent:'#f472b6',background:'#fdf4fb',text:'#2d0c28',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1560066984-138dadb4c035'),             // bright salon interior wide
+      about_main: U('photo-1580618672591-eb180b1a973f',900),     // stylist blow-drying hair
+      about_side: U('photo-1522337360788-8b13dee7a37e',400),     // hair tools / scissors flat-lay
+      form_bg:    U('photo-1519014816548-bf5fe059798b'),          // beauty products on white
+      footer_bg:  U('photo-1487412720507-e7ab37603c6f'),          // elegant dark salon bokeh
+    }},
+  { name:'Removals', icon:'🚚',
+    grad:'linear-gradient(135deg,#1a2a4a 0%,#2a4a7a 100%)',
+    theme:{primary:'#1a2a4a',secondary:'#2a4a7a',accent:'#f59e0b',background:'#f0f4fb',text:'#0f1a30',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1600518464441-9154a4dea21b'),          // removal team loading van
+      about_main: U('photo-1566576721346-d4a3b4eaeb55',900),     // workers carrying furniture
+      about_side: U('photo-1553413077-190dd305871c',400),        // stacked cardboard boxes
+      form_bg:    U('photo-1484154218962-a197022b5858'),           // interior with packing boxes
+      footer_bg:  U('photo-1558618666-fcd25c85cd64'),             // dark road / journey at dusk
+    }},
+  { name:'Painting & Decorating', icon:'🖌️',
+    grad:'linear-gradient(135deg,#3a1f10 0%,#7a4020 100%)',
+    theme:{primary:'#3a1f10',secondary:'#7a4020',accent:'#f59e0b',background:'#fdf8f2',text:'#20100a',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1562259929-b4e1fd3aef09'),             // painter on ladder wide
+      about_main: U('photo-1589939705384-5185137a7f0f',900),     // decorator rolling wall
+      about_side: U('photo-1523413651479-597eb2da0ad6',400),     // paint cans and brushes
+      form_bg:    U('photo-1513694203232-719a280e022f'),           // colourful geometric wall
+      footer_bg:  U('photo-1534349762230-e0cadf78f5da'),           // dark moody painted room
+    }},
+  { name:'Pest Control', icon:'🪲',
+    grad:'linear-gradient(135deg,#1a3a1a 0%,#285028 100%)',
+    theme:{primary:'#1a3a1a',secondary:'#285028',accent:'#84cc16',background:'#f3f9f0',text:'#101f10',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1604187351574-c75ca79f5807'),          // technician in protective suit spraying
+      about_main: U('photo-1590682680695-43b964a3ae17',900),     // worker in field / exterior inspection
+      about_side: U('photo-1558904541-efa843a96f01',400),        // equipment / spray nozzle close-up
+      form_bg:    U('photo-1501854140801-50d01698950b'),           // green field / natural backdrop
+      footer_bg:  U('photo-1416879595882-3373a0480b5b'),           // dark garden / foliage
+    }},
+  { name:'Appliance Repair', icon:'🔩',
+    grad:'linear-gradient(135deg,#1c2b30 0%,#2e6b75 100%)',
+    theme:{primary:'#1c2b30',secondary:'#2e6b75',accent:'#2dd4bf',background:'#f0fafa',text:'#0d1a1e',surface:'#ffffff'},
+    imgs:{
+      banner:     U('photo-1621905252507-b35492cc74b4'),           // technician repairing appliance
+      about_main: U('photo-1581092918056-0c4c3acd3789',900),     // engineer with tools at machine
+      about_side: U('photo-1567016432779-094069958ea5',400),     // appliance interior / components
+      form_bg:    U('photo-1516455590571-18256e5bb9ff'),           // modern kitchen / appliances
+      footer_bg:  U('photo-1461749280684-dccba630e2f6'),           // dark tech / workshop
+    }},
+];
+
+/* ── Utilities ─────────────────────────────────────── */
+function gp(path) {
+  try { return path.split('.').reduce((o,k)=>o?.[k], data) ?? ''; } catch { return ''; }
+}
+function sp(path, val) {
+  const keys = path.split('.'), last = keys.pop();
+  const t = keys.reduce((o,k)=>{ if(o[k]==null)o[k]={}; return o[k]; }, data);
+  t[last] = val;
+}
+function esc(s) {
+  return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── Toast ─────────────────────────────────────────── */
+let _tt;
+function toast(msg, type='ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = `toast ${type} show`;
+  clearTimeout(_tt); _tt = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+/* ── Load sites list ───────────────────────────────── */
+async function init() {
+  const r = await fetch('/api/sites');
+  sites = await r.json();
+  renderList();
+  if (sites.length) loadSite(sites[0]);
+}
+
+function renderList() {
+  document.getElementById('siteList').innerHTML = sites.map(id =>
+    `<div class="site-item ${id===currentId?'active':''}" onclick="loadSite('${id}')">
+       <div class="dot"></div>${esc(id)}
+     </div>`
+  ).join('');
+}
+
+/* ── Load a site ───────────────────────────────────── */
+async function loadSite(id) {
+  const r = await fetch(`/api/sites/${id}`);
+  if (!r.ok) { toast('Failed to load','err'); return; }
+  data = await r.json();
+  currentId = id;
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('editor').style.display = 'flex';
+  document.getElementById('edName').textContent = data.business_name || id;
+  document.getElementById('edId').textContent   = id;
+  renderList();
+  renderTabBar();
+  renderTab(activeTab);
+}
+
+/* ── Tabs ──────────────────────────────────────────── */
+function renderTabBar() {
+  document.getElementById('tabBar').innerHTML = TABS.map(t =>
+    `<button class="tab-btn ${t.id===activeTab?'active':''}" onclick="renderTab('${t.id}')">${t.label}</button>`
+  ).join('');
+}
+
+function renderTab(tab) {
+  activeTab = tab;
+  renderTabBar();
+  const fn = {
+    identity:  tabIdentity,
+    content:   tabContent,
+    theme:     tabTheme,
+    images:    tabImages,
+    services:  tabServices,
+    reviews:   tabReviews,
+    faqs:      tabFaqs,
+    standards: tabStandards,
+    ctas:      tabCtas,
+    pricing:   tabPricing,
+    gallery:   tabGallery,
+    meta:      tabMeta,
+  };
+  document.getElementById('tabBody').innerHTML = (fn[tab] || (()=>''))();
+  document.querySelectorAll('.img-url').forEach(updatePreview);
+}
+
+/* ── Field helpers ─────────────────────────────────── */
+function tf(label, path, ph='', type='text', ro=false) {
+  const v = esc(gp(path));
+  return `<div class="fg"><label>${label}</label>
+    <input type="${type}" value="${v}" placeholder="${esc(ph)}" ${ro?'readonly':''}
+           oninput="sp('${path}',this.value)${path==='business_name'?';document.getElementById(\'edName\').textContent=this.value||currentId':''}"
+    ></div>`;
+}
+function ta(label, path, ph='', rows=3) {
+  const v = esc(gp(path));
+  return `<div class="fg"><label>${label}</label>
+    <textarea rows="${rows}" placeholder="${esc(ph)}" oninput="sp('${path}',this.value)">${v}</textarea></div>`;
+}
+
+/* ── TAB: Identity ─────────────────────────────────── */
+function tabIdentity() {
+  const curNiche = (gp('niche') || '').toLowerCase();
+  const nicheGrid = NICHE_PRESETS.map((p, i) => {
+    const sel = curNiche === p.name.toLowerCase();
+    return `<div class="niche-card ${sel?'selected':''}" style="background:${p.grad}" title="${p.name}" onclick="selectNiche(${i})">
+      <div class="niche-icon">${p.icon}</div>
+      <div class="niche-name">${p.name}</div>
+      <div class="niche-check">✓</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="card">
+    <div class="card-title">Business Identity</div>
+    <div class="grid">
+      ${tf('Business Name','business_name','e.g. Rapid Clean')}
+      ${tf('City','city','e.g. Glasgow')}
+      ${tf('Domain','domain','e.g. rapidclean.co.uk')}
+      ${tf('Site ID (cannot change)','id','','text',true)}
+      ${tf('Logo Path or URL','logo_path','assets/logo.svg')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Service Type / Niche</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">
+      Click a preset to auto-apply matching colours and background images. Customise them afterwards in <strong>Theme</strong> and <strong>Images</strong>.
+    </p>
+    <div class="niche-grid">${nicheGrid}</div>
+    <div class="fg" style="margin-top:14px">
+      <label>Custom / Override</label>
+      <input type="text" value="${esc(gp('niche'))}" placeholder="Type a custom service type…"
+             oninput="sp('niche',this.value)">
+      <small>Typing here sets the niche text without changing colours.</small>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Contact Details</div>
+    <div class="grid">
+      ${tf('Phone Number','phone','+44 000 000 0000','tel')}
+      ${tf('Email Address','email','hello@example.co.uk','email')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Social Media <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Paste the full profile URL. Leave blank to hide the icon from the footer.</p>
+    <div class="grid">
+      ${tf('Facebook','social.facebook','https://facebook.com/yourbusiness')}
+      ${tf('Instagram','social.instagram','https://instagram.com/yourbusiness')}
+      ${tf('LinkedIn','social.linkedin','https://linkedin.com/company/yourbusiness')}
+      ${tf('Google Reviews','social.google','https://g.page/yourbusiness/review')}
+    </div>
+  </div>`;
+}
+
+function selectNiche(idx) {
+  const p = NICHE_PRESETS[idx];
+  sp('niche', p.name);
+  data.theme_colors = { ...p.theme };
+  // Apply each section image — skip any slot that already has a locally uploaded file
+  Object.entries(p.imgs).forEach(([key, url]) => {
+    if (!(gp(`images.${key}`) || '').startsWith('assets/')) sp(`images.${key}`, url);
+  });
+  renderTab('identity');
+  toast(`"${p.name}" applied — colours & all section images preset`, 'info');
+}
+
+/* ── TAB: Content ──────────────────────────────────── */
+function tabContent() {
+  return `
+  <div class="card">
+    <div class="card-title">Hero Section</div>
+    <div class="grid g1">
+      ${ta('Main Headline','headline','One powerful sentence that sells the business',2)}
+      ${ta('Sub-headline','subheadline','Short supporting line — who, what, where',2)}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">About Section</div>
+    ${ta('About Us Text','about_text','2–3 sentences about the business, experience, and what makes you different',4)}
+    <div class="grid" style="margin-top:12px">
+      ${tf('Jobs Done Count','jobs_count','e.g. 500+')}
+      ${tf('Jobs Done Label','jobs_text','e.g. Jobs completed in Glasgow')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Service Area</div>
+    ${tf('Service Area Description','service_area_text','Glasgow, Edinburgh, Stirling and surrounding areas')}
+  </div>`;
+}
+
+/* ── TAB: Theme ────────────────────────────────────── */
+function tabTheme() {
+  const cols = [
+    {k:'primary',   l:'Primary',    h:'Dark background — nav, footer, standard cards'},
+    {k:'secondary', l:'Secondary',  h:'Buttons, hover states, accents'},
+    {k:'accent',    l:'Accent',     h:'CTA highlights, icons, badges, star colour'},
+    {k:'background',l:'Background', h:'Page background — keep light'},
+    {k:'text',      l:'Body Text',  h:'Main text colour'},
+    {k:'surface',   l:'Surface',    h:'Card / panel background — usually white'},
+  ];
+  const presets = [
+    {n:'Blue / Gold',    p:'#0e3d60',s:'#1978a8',a:'#fca311',bg:'#f0f7fc',t:'#0a2850',su:'#ffffff'},
+    {n:'Forest / Lime',  p:'#1a3a2a',s:'#2d6a4f',a:'#95d44a',bg:'#f2f8f4',t:'#112219',su:'#ffffff'},
+    {n:'Slate / Pink',   p:'#2d1b4e',s:'#6b3fa0',a:'#f472b6',bg:'#faf5ff',t:'#1a0f3a',su:'#ffffff'},
+    {n:'Charcoal / Teal',p:'#1c2b30',s:'#2e6b75',a:'#2dd4bf',bg:'#f0fafa',t:'#0d1a1e',su:'#ffffff'},
+    {n:'Crimson',        p:'#7b1d1d',s:'#c0392b',a:'#e8c96a',bg:'#fdf5f5',t:'#4a0e0e',su:'#ffffff'},
+    {n:'Midnight',       p:'#0c0f1e',s:'#1e293b',a:'#818cf8',bg:'#f8faff',t:'#0c0f1e',su:'#ffffff'},
+  ];
+
+  return `
+  <div class="card">
+    <div class="card-title">Colour Scheme</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Click a swatch to open the colour picker. Or type a hex code directly.</p>
+    <div class="grid">
+      ${cols.map(c => {
+        const v = gp(`theme_colors.${c.k}`) || '#000000';
+        return `<div class="fg">
+          <label>${c.l}</label>
+          <div class="color-row">
+            <div class="swatch">
+              <div class="swatch-fill" id="sf-${c.k}" style="background:${esc(v)}"></div>
+              <input type="color" value="${esc(v)}" oninput="pickColor('${c.k}',this.value)">
+            </div>
+            <input type="text" class="color-hex" id="ch-${c.k}" value="${esc(v)}" maxlength="7"
+                   oninput="hexColor('${c.k}',this.value)">
+          </div>
+          <div class="color-hint">${c.h}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="presets">
+      <span class="preset-label">Quick Presets</span>
+      ${presets.map(p=>`<button class="btn btn-ghost" style="font-size:12px;padding:6px 12px"
+        onclick='applyPreset(${JSON.stringify(p)})'>${p.n}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function pickColor(k, v) {
+  sp(`theme_colors.${k}`, v);
+  const el = document.getElementById(`ch-${k}`); if(el) el.value = v;
+  const sf = document.getElementById(`sf-${k}`); if(sf) sf.style.background = v;
+}
+function hexColor(k, v) {
+  if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+    sp(`theme_colors.${k}`, v);
+    const sf = document.getElementById(`sf-${k}`); if(sf) sf.style.background = v;
+  }
+}
+function applyPreset(p) {
+  data.theme_colors = {primary:p.p,secondary:p.s,accent:p.a,background:p.bg,text:p.t,surface:p.su};
+  renderTab('theme');
+  toast('Preset applied — hit Save to keep it','info');
+}
+
+/* ── TAB: Images ───────────────────────────────────── */
+function tabImages() {
+  const imgs = [
+    {k:'banner',    l:'Hero Background',      h:'Fullscreen hero + form section — 1920×1080 recommended'},
+    {k:'about_main',l:'About Photo (large)',  h:'Left side of About section — 900×600'},
+    {k:'about_side',l:'About Photo (small)',  h:'Overlapping accent photo — 400×300'},
+    {k:'form_bg',   l:'Contact Form Background', h:'Background behind the quote form — defaults to hero image'},
+    {k:'footer_bg', l:'Footer Background',    h:'Footer photo — often same as hero'},
+  ];
+  return `
+  <div class="card">
+    <div class="card-title">Background Images</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:18px">
+      Paste a URL <strong>or</strong> click 📁 to upload a file from your computer.
+      Uploaded files are saved into the site's <code>assets/</code> folder.
+    </p>
+    <div class="grid">
+      ${imgs.map(img => {
+        const v = gp(`images.${img.k}`);
+        const uid = `img-${img.k}`;
+        return `<div class="fg">
+          <label>${img.l}</label>
+          <div class="img-row">
+            <input type="text" class="img-url" data-prev="pv-${img.k}" value="${esc(v)}"
+                   placeholder="https://… or click 📁 to upload"
+                   oninput="sp('images.${img.k}',this.value);updatePreview(this)">
+            <button class="btn-upload" title="Upload from your computer"
+                    onclick="document.getElementById('${uid}').click()">📁</button>
+            <input type="file" id="${uid}" accept="image/*" style="display:none"
+                   data-path="images.${img.k}" data-prev="pv-${img.k}"
+                   onchange="handleUpload(this)">
+          </div>
+          <div class="upload-hint">${img.h}</div>
+          <div id="pv-${img.k}">
+            ${v ? `<img class="img-prev" src="${esc(toPreviewSrc(v))}" onerror="this.style.display='none'">`
+                : `<div class="img-placeholder">No image yet</div>`}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function toPreviewSrc(v) {
+  if (!v) return '';
+  // Convert stored relative paths (assets/...) to admin-accessible URL
+  if (v.startsWith('assets/')) return `/site-assets/${currentId}/${v}`;
+  return v;
+}
+function updatePreview(input) {
+  const c = document.getElementById(input.dataset.prev);
+  if (!c) return;
+  const v = input.value.trim();
+  c.innerHTML = v
+    ? `<img class="img-prev" src="${esc(toPreviewSrc(v))}" onerror="this.style.display='none'">`
+    : `<div class="img-placeholder">No image — paste a URL above</div>`;
+}
+
+/* ── TAB: Services ─────────────────────────────────── */
+function tabServices() {
+  const arr = data.services || [];
+  return `
+  <div class="card">
+    <div class="card-title">Services (${arr.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Each service appears as a row on the site. 3–6 services works best.</p>
+    ${arr.map((item,i)=>`
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">Service ${i+1}</span>
+          <button class="btn btn-del" onclick="del('services',${i})">Remove</button>
+        </div>
+        <div class="li-body">
+          <div class="fg"><label>Title</label>
+            <input value="${esc(item.title)}" placeholder="e.g. Emergency Call-Out"
+                   oninput="data.services[${i}].title=this.value">
+          </div>
+          <div class="fg"><label>Description</label>
+            <input value="${esc(item.description)}" placeholder="Brief description of this service"
+                   oninput="data.services[${i}].description=this.value">
+          </div>
+        </div>
+      </div>`).join('')}
+    <button class="btn btn-add" onclick="add('services',{title:'',description:''})">+ Add Service</button>
+  </div>`;
+}
+
+/* ── TAB: Reviews ──────────────────────────────────── */
+function tabReviews() {
+  const arr = data.reviews || [];
+  return `
+  <div class="card">
+    <div class="card-title">Reviews / Testimonials (${arr.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Use real quotes. 3–5 reviews is ideal.</p>
+    ${arr.map((item,i)=>`
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">${esc(item.name||`Review ${i+1}`)}</span>
+          <button class="btn btn-del" onclick="del('reviews',${i})">Remove</button>
+        </div>
+        <div class="li-body g1">
+          <div class="grid">
+            <div class="fg"><label>Name</label>
+              <input value="${esc(item.name||'')}" placeholder="e.g. J. Smith"
+                     oninput="data.reviews[${i}].name=this.value;this.closest('.li').querySelector('.li-title').textContent=this.value||'Review ${i+1}'">
+            </div>
+            <div class="fg"><label>Role / Location</label>
+              <input value="${esc(item.role||'')}" placeholder="e.g. Homeowner, Glasgow"
+                     oninput="data.reviews[${i}].role=this.value">
+            </div>
+          </div>
+          <div class="fg"><label>Quote (their exact words)</label>
+            <textarea rows="2" placeholder="A short punchy quote in their own voice"
+                      oninput="data.reviews[${i}].quote=this.value">${esc(item.quote||'')}</textarea>
+          </div>
+        </div>
+      </div>`).join('')}
+    <button class="btn btn-add" onclick="add('reviews',{name:'',quote:'',role:''})">+ Add Review</button>
+  </div>`;
+}
+
+/* ── TAB: FAQs ─────────────────────────────────────── */
+function tabFaqs() {
+  const arr = data.faqs || [];
+  return `
+  <div class="card">
+    <div class="card-title">FAQs (${arr.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Answer common objections and questions. 3–6 FAQs works well.</p>
+    ${arr.map((item,i)=>`
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">FAQ ${i+1}</span>
+          <button class="btn btn-del" onclick="del('faqs',${i})">Remove</button>
+        </div>
+        <div class="li-body g1">
+          <div class="fg"><label>Question</label>
+            <input value="${esc(item.question||'')}" placeholder="e.g. Are you fully insured?"
+                   oninput="data.faqs[${i}].question=this.value">
+          </div>
+          <div class="fg"><label>Answer</label>
+            <textarea rows="2" placeholder="Clear, direct answer"
+                      oninput="data.faqs[${i}].answer=this.value">${esc(item.answer||'')}</textarea>
+          </div>
+        </div>
+      </div>`).join('')}
+    <button class="btn btn-add" onclick="add('faqs',{question:'',answer:''})">+ Add FAQ</button>
+  </div>`;
+}
+
+/* ── TAB: Standards ────────────────────────────────── */
+function tabStandards() {
+  const arr  = data.differentiators || [];
+  const trust = data.trust_proof    || [];
+  return `
+  <div class="card">
+    <div class="card-title">Standards / Why Choose Us (${arr.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Shown as dark premium cards on the site. Each is a reason to trust this business. 4–6 is ideal.</p>
+    ${arr.map((item,i)=>`
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">Standard ${i+1}</span>
+          <button class="btn btn-del" onclick="del('differentiators',${i})">Remove</button>
+        </div>
+        <div class="fg">
+          <textarea rows="2" placeholder="e.g. All engineers are fully insured and identity-checked before every visit."
+                    oninput="data.differentiators[${i}]=this.value">${esc(item)}</textarea>
+        </div>
+      </div>`).join('')}
+    <button class="btn btn-add" onclick="addStr('differentiators')">+ Add Standard</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Trust Strip Badges (${trust.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Short badges in the proof strip. Leave empty to auto-fill from reviews.</p>
+    ${trust.map((item,i)=>`
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">Badge ${i+1}</span>
+          <button class="btn btn-del" onclick="del('trust_proof',${i})">Remove</button>
+        </div>
+        <div class="fg">
+          <input value="${esc(item)}" placeholder="e.g. 500+ 5-Star Reviews"
+                 oninput="data.trust_proof[${i}]=this.value">
+        </div>
+      </div>`).join('')}
+    <button class="btn btn-add" onclick="addStr('trust_proof')">+ Add Badge</button>
+  </div>`;
+}
+
+/* ── TAB: CTAs ─────────────────────────────────────── */
+function tabCtas() {
+  return `
+  <div class="card">
+    <div class="card-title">Primary Call to Action</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">The main button shown throughout the site. Use a phone link (<code>tel:+44...</code>) or a booking URL.</p>
+    <div class="grid">
+      ${tf('Button Text','cta_text','e.g. Call Now — Available 24/7')}
+      ${tf('Button URL','cta_url','tel:+44000000000')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hero Button (optional)</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Only fill in if the hero button should differ from the main CTA above.</p>
+    <div class="grid">
+      ${tf('Hero Button Text','hero_cta_text','Leave blank to use the primary CTA text')}
+      ${tf('Hero Button URL','hero_cta_url','Leave blank to use the primary CTA URL')}
+    </div>
+  </div>`;
+}
+
+/* ── TAB: Pricing ──────────────────────────────────── */
+function tabPricing() {
+  const arr = data.pricing || [];
+  return `
+  <div class="card">
+    <div class="card-title">Pricing Tiers (${arr.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Optional — leave empty to hide the pricing section entirely. 3 tiers works best.</p>
+    ${arr.map((item,i)=>`
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">${esc(item.tier||`Tier ${i+1}`)}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer">
+              <input type="checkbox" ${item.highlight?'checked':''} onchange="data.pricing[${i}].highlight=this.checked">
+              Most Popular
+            </label>
+            <button class="btn btn-del" onclick="del('pricing',${i})">Remove</button>
+          </div>
+        </div>
+        <div class="grid" style="margin-bottom:10px">
+          <div class="fg"><label>Tier Name</label>
+            <input value="${esc(item.tier||'')}" placeholder="e.g. Starter"
+                   oninput="data.pricing[${i}].tier=this.value;this.closest('.li').querySelector('.li-title').textContent=this.value||'Tier ${i+1}'">
+          </div>
+          <div class="fg"><label>Price</label>
+            <input value="${esc(item.price||'')}" placeholder="e.g. £99"
+                   oninput="data.pricing[${i}].price=this.value">
+          </div>
+          <div class="fg"><label>Unit / Label</label>
+            <input value="${esc(item.unit||'')}" placeholder="e.g. from / per month"
+                   oninput="data.pricing[${i}].unit=this.value">
+          </div>
+          <div class="fg"><label>Button Text</label>
+            <input value="${esc(item.cta||'')}" placeholder="e.g. Get Started"
+                   oninput="data.pricing[${i}].cta=this.value">
+          </div>
+        </div>
+        <div class="fg"><label>Features (one per line)</label>
+          <textarea rows="4" placeholder="Feature one&#10;Feature two&#10;Feature three"
+                    oninput="data.pricing[${i}].features=this.value.split('\\n').filter(Boolean)">${esc((item.features||[]).join('\n'))}</textarea>
+        </div>
+      </div>`).join('')}
+    <button class="btn btn-add" onclick="add('pricing',{tier:'',price:'',unit:'',features:[],highlight:false,cta:'Get Started'})">+ Add Pricing Tier</button>
+  </div>`;
+}
+
+/* ── TAB: Meta ─────────────────────────────────────── */
+function tabMeta() {
+  return `
+  <div class="card">
+    <div class="card-title">SEO / Metadata</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Auto-generated from your business data if left blank. Fill in for custom SEO control.</p>
+    <div class="grid g1">
+      ${tf('Page Title','metadata.title','Auto-generated from business name, service type and city')}
+      ${ta('Meta Description','metadata.description','1–2 sentence description for search engines',3)}
+    </div>
+    <div class="grid" style="margin-top:12px">
+      ${tf('Locale','metadata.locale','e.g. en-GB')}
+      ${tf('Opening Hours','metadata.opening_hours','e.g. Mo-Fr 08:00-18:00; Sa 09:00-14:00')}
+    </div>
+    <div class="grid g1" style="margin-top:12px">
+      ${tf('Address / Service Area','metadata.address','e.g. Glasgow City Centre, Scotland')}
+    </div>
+  </div>`;
+}
+
+/* ── Array helpers ─────────────────────────────────── */
+function add(type, tmpl) {
+  if (!data[type]) data[type] = [];
+  data[type].push({...tmpl});
+  renderTab(activeTab);
+}
+/* ── TAB: Gallery ──────────────────────────────────── */
+function tabGallery() {
+  const arr = data.gallery || [];
+  return `
+  <div class="card">
+    <div class="card-title">Photo Gallery (${arr.length})</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">
+      Optional — leave empty to hide the gallery section entirely.
+      Paste image URLs <strong>or</strong> click 📁 to upload from your computer.
+    </p>
+    ${arr.map((item,i) => {
+      const uid = `gal-file-${i}`;
+      return `
+      <div class="li">
+        <div class="li-head">
+          <span class="li-title">Photo ${i+1}${item.caption?' — '+esc(item.caption):''}</span>
+          <button class="btn btn-del" onclick="del('gallery',${i})">Remove</button>
+        </div>
+        <div class="li-body g1">
+          <div class="fg">
+            <label>Image</label>
+            <div class="img-row">
+              <input type="text" class="img-url" data-prev="gpv-${i}" value="${esc(item.img||'')}"
+                     placeholder="https://… or click 📁 to upload"
+                     oninput="data.gallery[${i}].img=this.value;updatePreview(this)">
+              <button class="btn-upload" title="Upload from your computer"
+                      onclick="document.getElementById('${uid}').click()">📁</button>
+              <input type="file" id="${uid}" accept="image/*" style="display:none"
+                     data-path="gallery.${i}.img" data-prev="gpv-${i}"
+                     onchange="handleUpload(this)">
+            </div>
+            <div id="gpv-${i}">
+              ${item.img
+                ? `<img class="img-prev" src="${esc(toPreviewSrc(item.img))}" onerror="this.style.display='none'">`
+                : `<div class="img-placeholder">No image yet</div>`}
+            </div>
+          </div>
+          <div class="grid">
+            <div class="fg"><label>Caption</label>
+              <input value="${esc(item.caption||'')}" placeholder="Brief caption shown below the photo"
+                     oninput="data.gallery[${i}].caption=this.value;this.closest('.li').querySelector('.li-title').textContent='Photo ${i+1}'+( this.value?' — '+this.value:'')">
+            </div>
+            <div class="fg"><label>Alt Text (optional)</label>
+              <input value="${esc(item.alt||'')}" placeholder="Accessibility description"
+                     oninput="data.gallery[${i}].alt=this.value">
+            </div>
+          </div>
+        </div>
+      </div>`}).join('')}
+    <button class="btn btn-add" onclick="add('gallery',{img:'',caption:'',alt:''})">+ Add Photo</button>
+  </div>`;
+}
+
+/* ── Upload helpers ────────────────────────────────── */
+function handleUpload(fileInput) {
+  const file = fileInput.files[0];
+  if (!file) return;
+  if (file.size > 12 * 1024 * 1024) { toast('File too large — max 12 MB','err'); return; }
+  toast('Uploading…','info');
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const fname = Date.now() + '-' + file.name.replace(/[^a-z0-9._-]/gi,'-').toLowerCase();
+    const r = await fetch(`/api/upload/${currentId}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ filename: fname, data: e.target.result }),
+    });
+    const j = await r.json();
+    if (!j.url) { toast('Upload failed','err'); return; }
+    sp(fileInput.dataset.path, j.url);
+    // Update the URL text input in the same img-row
+    const row = fileInput.closest('.img-row') || fileInput.parentElement;
+    const textInput = row ? row.querySelector('input[type="text"]') : null;
+    if (textInput) { textInput.value = j.url; }
+    // Update preview (use server-provided preview URL so browser can load the uploaded file)
+    const prev = document.getElementById(fileInput.dataset.prev);
+    if (prev) prev.innerHTML = `<img class="img-prev" src="${j.preview || j.url}">`;
+    toast('Uploaded ✓');
+  };
+  reader.readAsDataURL(file);
+}
+
+function addStr(type) {
+  if (!data[type]) data[type] = [];
+  data[type].push('');
+  renderTab(activeTab);
+}
+function del(type, i) {
+  data[type].splice(i, 1);
+  renderTab(activeTab);
+}
+
+/* ── Save ──────────────────────────────────────────── */
+async function save() {
+  if (!currentId) return;
+  const r = await fetch(`/api/sites/${currentId}`, {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (r.ok) { toast('Saved ✓'); renderList(); }
+  else toast('Save failed','err');
+}
+
+/* ── Generate ──────────────────────────────────────── */
+async function generate() {
+  if (!currentId) return;
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true; btn.textContent = '⏳ Generating…';
+  toast('Saving and generating…','info');
+  try {
+    await fetch(`/api/sites/${currentId}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data),
+    });
+    const r = await fetch(`/api/generate/${currentId}`, {method:'POST'});
+    const j = await r.json();
+    if (r.ok) {
+      toast('Site generated ✓ — find it in generated-sites/');
+      btn.textContent = '✓ Done';
+      setTimeout(()=>{ btn.disabled=false; btn.textContent='⚡ Generate Site'; }, 3000);
+    } else {
+      toast('Generation failed: ' + j.error, 'err');
+      btn.disabled=false; btn.textContent='⚡ Generate Site';
+    }
+  } catch {
+    toast('Network error','err');
+    btn.disabled=false; btn.textContent='⚡ Generate Site';
+  }
+}
+
+/* ── New site modal ────────────────────────────────── */
+function showModal() { document.getElementById('modal').style.display='flex'; document.getElementById('newId').focus(); }
+function hideModal() { document.getElementById('modal').style.display='none'; }
+async function createSite() {
+  const id = document.getElementById('newId').value.trim();
+  if (!id) { toast('Enter a site ID','err'); return; }
+  const r = await fetch('/api/sites', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({id}),
+  });
+  const j = await r.json();
+  if (r.ok) {
+    hideModal();
+    sites = [...sites, id].sort();
+    renderList();
+    await loadSite(id);
+    toast(`"${id}" created — fill in the details and hit Generate`);
+  } else toast(j.error||'Failed','err');
+}
+
+/* ── Keyboard shortcut Ctrl+S ──────────────────────── */
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); save(); }
+});
+
+init();
+</script>
+</body>
+</html>

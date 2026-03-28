@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60">
+  <!-- Wrench mark -->
+  <path d="M10 46 L30 26 L26 22 L34 14 C38 10 44 10 46 14 C44 14 40 16 40 20 C40 24 44 26 46 24 C46 28 42 32 38 32 L30 26 L14 46 Z"
+        fill="#c0392b"/>
+  <!-- Bolt accent -->
+  <path d="M14 46 L10 50 C8 52 10 54 12 52 L16 48 Z" fill="#f39c12"/>
+  <!-- Speed tick mark -->
+  <polyline points="24,10 30,16 36,10" fill="none" stroke="#f39c12" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="54" y="22" font-family="'Segoe UI',Arial,sans-serif" font-weight="900" font-size="16" fill="#c0392b" letter-spacing="-0.4">QUICK</text>
+  <text x="108" y="22" font-family="'Segoe UI',Arial,sans-serif" font-weight="900" font-size="16" fill="#e74c3c" letter-spacing="-0.4">FIX</text>
+  <text x="54" y="38" font-family="'Segoe UI',Arial,sans-serif" font-weight="800" font-size="13" fill="#f39c12" letter-spacing="0">PRO</text>
+  <text x="54" y="52" font-family="'Segoe UI',Arial,sans-serif" font-weight="700" font-size="7" fill="#c0392b" letter-spacing="1.4">LIVERPOOL · HOME REPAIRS</text>
+</svg>

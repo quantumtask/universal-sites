@@ -1,0 +1,88 @@
+{
+  "id": "sparkle-clean-leeds",
+  "business_name": "Sparkle Clean",
+  "niche": "Professional Cleaners",
+  "city": "Leeds",
+  "domain": "sparklecleanleeds.co.uk",
+  "logo_path": "assets/logo.svg",
+  "phone": "+44 113 555 2200",
+  "email": "book@sparklecleanleeds.co.uk",
+  "headline": "Leeds' leading professional cleaning service — deep cleans, end-of-tenancy and commercial contracts, same-day bookings.",
+  "subheadline": "Leeds' most trusted professional cleaning company.",
+  "about_text": "Sparkle Clean delivers deep cleans, end-of-tenancy cleans and regular domestic and commercial cleaning across Leeds and West Yorkshire. Our vetted, insured cleaners work seven days a week — flexible hours, guaranteed results.",
+  "services": [
+    { "title": "End-of-Tenancy Deep Clean", "description": "Full property deep clean to landlord and lettings-agent standard, including ovens, carpets and all fixtures across Leeds." },
+    { "title": "Regular Domestic Cleaning", "description": "Weekly, fortnightly or monthly cleaning visits — same trusted cleaner every time, fully insured and reference-checked." },
+    { "title": "Commercial & Office Cleaning", "description": "Daily, weekly or ad-hoc commercial cleans for offices, retail units and hospitality venues across West Yorkshire." }
+  ],
+  "reviews": [
+    { "name": "Laura M.", "quote": "The end-of-tenancy clean was immaculate — got our full deposit back without any dispute.", "body": "Sparkle Clean turned a heavily used two-bed flat around in five hours. Every surface, every appliance — spotless. The letting agent was delighted and we received our full deposit back the same week. Couldn't recommend more highly.", "role": "Tenant, Leeds" },
+    { "name": "Dan F.", "quote": "Same cleaner every fortnight, always on time and the flat is always perfect.", "body": "I've used Sparkle Clean for eight months now for my regular fortnightly clean. It's a proper home clean — not a surface wipe. Everything is put back exactly as I left it and the quality has never dropped once.", "role": "Homeowner, Headingley" },
+    { "name": "Priya N.", "quote": "Our office has never looked this good. Professional team, reliable scheduling.", "body": "We switched our office cleaning contract to Sparkle Clean six months ago. The team are thorough, discreet and always completed before staff arrive. Scheduling is easy and the supervisor checks in regularly to make sure standards are maintained.", "role": "Office Manager, Leeds City Centre" }
+  ],
+  "faqs": [
+    { "question": "Are your cleaners vetted and insured?", "answer": "Yes — every cleaner is DBS checked, reference-verified and covered by our full public liability insurance policy." },
+    { "question": "Can you provide a same-day or next-day clean in Leeds?", "answer": "We offer same-day bookings subject to availability — call us and we'll confirm within the hour." },
+    { "question": "Do you guarantee your end-of-tenancy clean?", "answer": "All end-of-tenancy cleans come with a 72-hour re-clean guarantee if anything is flagged by the letting agent." }
+  ],
+  "differentiators": [
+    "All cleaners are DBS checked, reference-verified and fully insured on every visit.",
+    "We offer same-day and next-day bookings across Leeds — call us and we'll confirm within the hour.",
+    "Every clean includes a quality checklist sign-off to ensure consistent, verifiable results each visit.",
+    "You receive an itemised quote before we start. No hidden charges, no surprises — ever.",
+    "All end-of-tenancy cleans include a 72-hour re-clean guarantee at no extra charge.",
+    "Full clean completion reports provided for landlords, letting agents and property management companies."
+  ],
+  "jobs_count": "1,200+",
+  "jobs_text": "Cleans completed across Leeds",
+  "service_area_text": "Leeds, Bradford, Harrogate, Wakefield, Huddersfield and surrounding West Yorkshire areas.",
+  "cta_text": "Book Now — Same-Day Available",
+  "cta_url": "tel:+441135552200",
+  "images": {
+    "banner": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1920&q=85&auto=format",
+    "service1": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=480&q=85&auto=format",
+    "service2": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=480&q=85&auto=format",
+    "service3": "https://images.unsplash.com/photo-1606166187734-a4cb74079037?w=480&q=85&auto=format"
+  },
+  "pricing": [
+    {
+      "tier": "One-Off Deep Clean",
+      "price": "£149",
+      "unit": "from",
+      "features": ["Full property deep clean", "DBS-checked cleaner", "Quality checklist sign-off", "Eco-friendly products"],
+      "highlight": false,
+      "cta": "Book a Clean"
+    },
+    {
+      "tier": "Regular Domestic",
+      "price": "£75",
+      "unit": "per visit",
+      "features": ["Weekly or fortnightly visits", "Same trusted cleaner", "Flexible scheduling", "72-hour satisfaction guarantee", "Full insurance cover"],
+      "highlight": true,
+      "cta": "Start Regular Cleans"
+    },
+    {
+      "tier": "End-of-Tenancy",
+      "price": "£229",
+      "unit": "from",
+      "features": ["Landlord-standard deep clean", "Oven & appliance clean", "Carpet & upholstery", "72-hour re-clean guarantee", "Completion certificate"],
+      "highlight": false,
+      "cta": "Book EOT Clean"
+    }
+  ],
+  "theme_colors": {
+    "primary": "#1d6b4f",
+    "secondary": "#2e9e76",
+    "accent": "#a8e6cf",
+    "background": "#f5fbf8",
+    "text": "#0d2e1f",
+    "surface": "#ffffff"
+  },
+  "metadata": {
+    "title": "Sparkle Clean | Professional Cleaners Leeds",
+    "description": "Sparkle Clean provides professional domestic, end-of-tenancy and commercial cleaning across Leeds and West Yorkshire. Same-day bookings, vetted cleaners, guaranteed results.",
+    "locale": "en-GB",
+    "opening_hours": "Mo-Su 07:00-21:00",
+    "address": "Leeds City Centre, West Yorkshire"
+  }
+}

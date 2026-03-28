@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="{{locale}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}" />
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{og_image}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{og_image}}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>{{styles}}</style>
+</head>
+<body>
+
+<!-- ── Scroll progress ──────────────────────────────────── -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- ── Navigation ───────────────────────────────────────── -->
+<nav class="navbar" id="navbar" aria-label="Main navigation">
+  <div class="nav-container">
+
+    <!-- Logo -->
+    <a href="#hero" class="nav-brand" aria-label="{{business_name}} home">
+      <img src="{{logo_path}}" alt="{{business_name}}" width="140" height="44" loading="eager">
+    </a>
+
+    <!-- Mobile toggle checkbox (hidden) -->
+    <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" aria-hidden="true">
+
+    <!-- Nav links -->
+    <ul class="nav-menu" role="list" id="navMenu">
+      <li><a href="#services" class="nav-link">Services</a></li>
+      {{standards_nav_item}}
+      <li><a href="#about" class="nav-link">About</a></li>
+      {{pricing_nav_item}}
+      <li><a href="#reviews" class="nav-link">Reviews</a></li>
+      <li><a href="#faq" class="nav-link">FAQ</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+
+    <!-- CTA button -->
+    <div class="nav-cta-btn">
+      <a href="{{cta_url}}" class="primary-link-button" aria-label="{{cta_text}}">
+        <span class="button-text">{{cta_text}}</span>
+      </a>
+    </div>
+
+    <!-- Burger (mobile) -->
+    <label for="navToggle" class="nav-burger" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────── -->
+<section class="home-banner-section" id="hero" aria-label="Hero">
+
+  <!-- Background image + overlay -->
+  <div class="banner-bg-image-wrapper" aria-hidden="true">
+    <div class="banner-overlay home-banner"></div>
+    <img
+      class="banner-bg-image"
+      src="{{banner_img_url}}"
+      alt="{{niche}} services in {{city}}"
+      loading="eager"
+      fetchpriority="high"
+    >
+  </div>
+
+  <!-- Content -->
+  <div class="home-banner-wrap base-container">
+
+    <!-- Left: badge + paragraph + CTA -->
+    <div class="home-banner-text-wrapper reveal">
+      <span class="badge-white">{{niche}} &middot; {{city}}</span>
+      <p class="paragraph-large text-white">{{subheadline}}</p>
+      <div class="hero-cta-wrap">
+        <a href="{{hero_cta_url}}" class="primary-link-button">
+          <span class="button-text text-white">{{hero_cta_text}}</span>
+        </a>
+        <a href="#about" class="button button-outline" style="border-color:rgba(255,255,255,0.5);color:white;background:transparent;">
+          About Us &darr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Right: giant company name H1 -->
+    <div class="home-banner-title-wrapper reveal" style="--i:1">
+      <p class="home-title-description">{{niche_lower}} specialists</p>
+      <h1 class="home-h1-title">{{business_name}}</h1>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Proof strip ───────────────────────────────────────── -->
+<div class="proof-strip" id="trust" aria-label="Trust signals">
+  <div class="proof-content">
+    <div class="proof-items reveal">{{trustItems}}</div>
+  </div>
+</div>
+
+<!-- ── About ─────────────────────────────────────────────── -->
+<section class="section section-alt" id="about" aria-labelledby="about-heading">
+  <div class="base-container">
+    <div class="home-about-block">
+
+      <!-- Left: stacked photos -->
+      <div class="about-images-wrap reveal">
+        <img
+          class="about-big-image"
+          src="{{about_img_large}}"
+          alt="{{business_name}} at work in {{city}}"
+          loading="lazy"
+        >
+        <img
+          class="about-small-image"
+          src="{{about_img_small}}"
+          alt="{{niche}} team"
+          loading="lazy"
+        >
+      </div>
+
+      <!-- Right: text + buttons -->
+      <div class="about-right-wrap reveal" style="--i:1">
+        <div class="home-about-block-title-wrap">
+          <span class="label">Who We Are</span>
+          <div class="about-title-wrap">
+            <h2 id="about-heading">{{about_headline}}</h2>
+          </div>
+          <div class="about-paragraph-wrap">
+            <p>{{about_text}}</p>
+          </div>
+        </div>
+        <div class="about-buttons-wrap">
+          <a href="{{cta_url}}" class="button">{{cta_text}}</a>
+          <a href="tel:{{phone_tel}}" class="button button-outline">Call Us Now</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Services ──────────────────────────────────────────── -->
+<section class="section" id="services" aria-labelledby="services-heading">
+  <div class="base-container">
+
+    <div class="section-title-wrap reveal">
+      <span class="section-label">What We Do</span>
+      <h2 id="services-heading">{{niche}} Services in {{city}}</h2>
+      <p style="color:var(--color-muted);font-size:1.03rem;line-height:1.7;margin-top:16px;">{{service_area_text}}</p>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:16px;">
+      <div></div>
+      <a href="{{cta_url}}" class="primary-link-button">
+        <span class="button-text">Get a Free Quote</span>
+      </a>
+    </div>
+
+    <div class="sup-collection-list reveal" style="--i:1">
+      {{services}}
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Standards section (engine renders full section HTML) ─ -->
+{{standards_section}}
+
+<!-- ── Form / CTA photo section ──────────────────────────── -->
+<section class="section photo-section" id="lead" aria-labelledby="lead-heading"
+  style="background-image:url('{{form_bg_url}}');">
+
+  <div class="form-block-overlay" aria-hidden="true"></div>
+
+  <div class="form-block-wrap">
+
+    <!-- Left: text -->
+    <div class="form-block-text-wrap reveal">
+      <div class="form-block-title-wrapper">
+        <span class="label text-white">Get Started Today</span>
+        <h2 id="lead-heading">{{cta_headline}}</h2>
+        <p class="form-block-body-text">{{cta_body}}</p>
+      </div>
+      <div>
+        <p class="form-block-bold-text">Serving {{city}} and surrounding areas. Fast response guaranteed.</p>
+        <p class="form-block-bold-text" style="margin-top:8px;">&#9742; <a href="tel:{{phone_tel}}" style="color:inherit;">{{phone}}</a></p>
+      </div>
+    </div>
+
+    <!-- Right: white form panel -->
+    <div class="reveal" style="--i:1;flex-shrink:0;">
+      <form class="form-block" id="lead-form" novalidate>
+        <div class="form-top-label">Request a Free Quote</div>
+
+        <div class="form-line">
+          <div class="form-fielld-wrap">
+            <label class="field-label" for="lead-name">Your Name</label>
+            <input
+              id="lead-name"
+              class="text-field"
+              type="text"
+              name="name"
+              placeholder="Jane Smith"
+              autocomplete="name"
+              required
+            >
+          </div>
+          <div class="form-fielld-wrap">
+            <label class="field-label" for="lead-phone">Phone Number</label>
+            <input
+              id="lead-phone"
+              class="text-field"
+              type="tel"
+              name="phone"
+              placeholder="{{phone}}"
+              autocomplete="tel"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-fielld-wrap">
+          <label class="field-label" for="lead-email">Email Address</label>
+          <input
+            id="lead-email"
+            class="text-field"
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-fielld-wrap">
+          <label class="field-label" for="lead-message">Describe the Job</label>
+          <textarea
+            id="lead-message"
+            class="text-field"
+            name="message"
+            placeholder="Briefly describe what you need help with…"
+            style="min-height:80px;resize:vertical;padding-top:10px;line-height:1.6"
+          ></textarea>
+        </div>
+
+        <div class="form-line">
+          <div class="form-fielld-wrap">
+            <label class="field-label" for="lead-service">Service Type</label>
+            <select id="lead-service" class="text-field w-select" name="service">
+              <option value="">Select a service&hellip;</option>
+              {{form_services}}
+            </select>
+          </div>
+          <div class="form-fielld-wrap">
+            <label class="field-label" for="lead-property">Property Type</label>
+            <select id="lead-property" class="text-field w-select" name="property">
+              <option value="">Select type&hellip;</option>
+              <option>Residential</option>
+              <option>Commercial</option>
+              <option>Industrial</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-submit-wrap">
+          <button type="submit" class="button form-button">
+            Send My Request &rarr;
+          </button>
+        </div>
+
+        <p style="font-size:11px;color:var(--color-muted);text-align:center;margin-top:4px;">
+          No spam. We'll contact you within 1 business day.
+        </p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FAQ ───────────────────────────────────────────────── -->
+<section class="section section-alt" id="faq" aria-labelledby="faq-heading">
+  <div class="base-container">
+
+    <div class="section-title-wrap reveal">
+      <span class="section-label">Frequently Asked Questions</span>
+      <h2 id="faq-heading">Common Questions About Our {{niche}} Services</h2>
+    </div>
+
+    <div class="blog-collection-list reveal" style="--i:1">
+      {{faq}}
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Testimonials ───────────────────────────────────────── -->
+<section class="section" id="reviews" aria-labelledby="reviews-heading">
+  <div class="base-container">
+
+    <div class="testimonials-label-wrap reveal">
+      <span class="section-label">Testimonials</span>
+    </div>
+    <div class="horizontal-title-wrap reveal" style="--i:1">
+      <h2 id="reviews-heading">What Our Clients Say</h2>
+      <p style="color:var(--color-muted);font-size:0.95rem;max-width:320px;text-align:right;">{{trustHeadline}}</p>
+    </div>
+
+    <div class="testimonials-grid reveal" style="--i:2">
+      {{reviews}}
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Gallery (optional, engine may render empty string) ── -->
+{{gallery_section}}
+
+<!-- ── Pricing (optional, engine may render empty string) ── -->
+{{pricing_section}}
+
+<!-- ── Contact ────────────────────────────────────────────── -->
+<section class="section section-alt" id="contact" aria-labelledby="contact-heading">
+  <div class="base-container">
+
+    <div class="section-title-wrap reveal">
+      <span class="section-label">Get in Touch</span>
+      <h2 id="contact-heading">Contact {{business_name}}</h2>
+      <p style="color:var(--color-muted);font-size:1rem;margin-top:12px;">
+        We're ready to help with all your {{niche_lower}} needs in {{city}}.
+      </p>
+    </div>
+
+    <div class="contact-cards-grid">
+
+      <!-- Phone -->
+      <a href="tel:{{phone_tel}}" class="contact-card reveal" style="--i:0">
+        <div class="contact-card-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49 19.79 19.79 0 01-3.07-8.67A2 2 0 014.34 2h3.1a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-card-label">Call Us</span>
+          <strong class="contact-card-value">{{phone}}</strong>
+          <span class="contact-card-action">Tap to call &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Email -->
+      <a href="mailto:{{email}}" class="contact-card reveal" style="--i:1">
+        <div class="contact-card-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M2 7l10 7 10-7"/>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-card-label">Email Us</span>
+          <strong class="contact-card-value">{{email}}</strong>
+          <span class="contact-card-action">Send a message &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Service Area -->
+      <div class="contact-card reveal" style="--i:2">
+        <div class="contact-card-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-card-label">Service Area</span>
+          <strong class="contact-card-value">{{address}}</strong>
+        </div>
+      </div>
+
+      <!-- Opening Hours -->
+      <div class="contact-card reveal" style="--i:3">
+        <div class="contact-card-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-card-label">Opening Hours</span>
+          <strong class="contact-card-value">{{opening_hours}}</strong>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────── -->
+<footer class="footer-section" role="contentinfo" aria-label="Site footer"
+  style="background-image:url('{{footer_bg_url}}');">
+
+  <div class="footer-overlay" aria-hidden="true"></div>
+
+  <div class="footer-wrap">
+
+    <!-- Left column: email form + copyright -->
+    <div class="footer-left-wrap">
+      <div class="footer-left-text-wrap">
+        <div class="footer-form-title-wrap">
+          <p class="footer-intro-title">Stay in the loop</p>
+          <p class="footer-paragraph">Get tips, updates and offers from {{business_name}} delivered straight to your inbox.</p>
+        </div>
+        <form class="footer-form-block" id="footer-signup">
+          <input
+            class="footer-text-field"
+            type="email"
+            name="signup-email"
+            placeholder="Your email address"
+            autocomplete="email"
+            aria-label="Email address for newsletter"
+            required
+          >
+          <button class="button footer-form-button" type="submit">Subscribe &rarr;</button>
+        </form>
+      </div>
+      <p class="footer-rights">&copy; {{year}} {{business_name}}. All rights reserved. &middot; {{domain}}</p>
+    </div>
+
+    <!-- Centre columns: About + Services links -->
+    <div class="footer-columns-wrap">
+
+      <div class="links-column">
+        <p class="links-column-title">About</p>
+        <a href="#about" class="footer-link">Who We Are</a>
+        <a href="#reviews" class="footer-link">Testimonials</a>
+        <a href="#faq" class="footer-link">FAQ</a>
+        <a href="#lead" class="footer-link">Get a Quote</a>
+      </div>
+
+      <div class="links-column">
+        <p class="links-column-title">Services</p>
+        <a href="#services" class="footer-link">All Services</a>
+        {{standards_nav_item}}
+        {{pricing_nav_item}}
+        <a href="#contact" class="footer-link">Contact Us</a>
+      </div>
+
+      <div class="links-column">
+        <p class="links-column-title">Info</p>
+        <a href="#trust" class="footer-link">Why Choose Us</a>
+        <a href="{{cta_url}}" class="footer-link">{{cta_text}}</a>
+        <a href="mailto:{{email}}" class="footer-link">{{email}}</a>
+      </div>
+
+    </div>
+
+    <!-- Right column: contact + social -->
+    <div class="footer-right-wrap">
+
+      <div class="footer-contacts-links-wrap">
+        <p class="links-column-title" style="text-align:right;">Contact</p>
+        <a href="tel:{{phone_tel}}" class="label footer-contact-link">&#9742; {{phone}}</a>
+        <a href="mailto:{{email}}" class="label footer-contact-link">&#9993; {{email}}</a>
+        <span class="label footer-contact-link">&#128205; {{address}}</span>
+        <span class="label footer-contact-link">&#128336; {{opening_hours}}</span>
+      </div>
+
+      <div class="footer-social-icons-wrapper" aria-label="Social media links">
+        {{social_icons}}
+      </div>
+
+      <p class="footer-paragraph">
+        {{niche}} specialists proudly serving {{city}} and surrounding areas.
+        Licensed &amp; insured.
+      </p>
+
+    </div>
+
+  </div>
+
+  <hr class="footer-divider">
+
+  <div class="footer-bottom">
+    <small>&copy; {{year}} {{business_name}}. All rights reserved.</small>
+    <small>{{domain}} &middot; <a href="#privacy" class="footer-privacy-link">Privacy Policy</a></small>
+  </div>
+
+</footer>
+
+<!-- ── Privacy Notice (GDPR) ───────────────────────────────── -->
+<section id="privacy" class="privacy-section">
+  <div class="base-container">
+    <details class="privacy-details">
+      <summary class="privacy-summary">Privacy Policy &amp; Data Notice — {{business_name}}</summary>
+      <div class="privacy-body">
+        <div>
+          <h4>What we collect</h4>
+          <p>When you use our enquiry form, we collect your name, phone number, email address and a description of the job. If you subscribe to updates, we collect your email address only.</p>
+        </div>
+        <div>
+          <h4>Why we collect it</h4>
+          <p>Your data is used solely to respond to your service request or to send you relevant updates from {{business_name}}. We will not send marketing emails without your consent.</p>
+        </div>
+        <div>
+          <h4>Who we share it with</h4>
+          <p>Nobody. Your personal data is never sold, rented or shared with any third party.</p>
+        </div>
+        <div>
+          <h4>How long we keep it</h4>
+          <p>Enquiry data is retained for up to 12 months and then securely deleted. You may request earlier deletion at any time.</p>
+        </div>
+        <div>
+          <h4>Your rights (UK GDPR)</h4>
+          <p>You have the right to access, correct or erase your personal data. To exercise these rights, email <a href="mailto:{{email}}">{{email}}</a>. You also have the right to lodge a complaint with the ICO at <strong>ico.org.uk</strong>.</p>
+        </div>
+        <div>
+          <h4>Cookies &amp; tracking</h4>
+          <p>This website uses no tracking cookies and no third-party analytics. No data is collected from your visit beyond what you voluntarily submit via our forms.</p>
+        </div>
+        <p class="privacy-footer-note">Last updated {{year}} &middot; {{business_name}}, {{city}}. This notice is provided in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ── Floating UI ─────────────────────────────────────────── -->
+<a href="#hero" class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</a>
+<a href="{{hero_cta_url}}" class="float-cta" id="floatCta">{{hero_cta_text}}</a>
+
+<!-- ── Inline JS ──────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+
+  var prog   = document.getElementById('scrollProgress');
+  var nav    = document.getElementById('navbar');
+  var btt    = document.getElementById('backToTop');
+  var fcta   = document.getElementById('floatCta');
+
+  /* Scroll handler — progress bar + nav state + floating buttons */
+  function onScroll() {
+    var s = window.scrollY;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (prog) prog.style.width = (h > 0 ? (s / h) * 100 : 0) + '%';
+    if (nav)  nav.classList.toggle('scrolled', s > 50);
+    if (btt)  btt.classList.toggle('visible',  s > 500);
+    if (fcta) fcta.classList.toggle('visible', s > 800);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* Reveal: IntersectionObserver for .reveal → .visible */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          ro.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+    reveals.forEach(function (el) { ro.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('visible'); });
+  }
+
+  /* Stat counter animation for [data-target] elements */
+  function animateStat(el) {
+    var raw    = el.getAttribute('data-target') || el.textContent || '';
+    var num    = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+    var suffix = raw.replace(/^[\d,.]+/, '').trim();
+    if (isNaN(num) || num === 0) return;
+    var start = performance.now();
+    var ease  = function (t) { return 1 - Math.pow(1 - t, 3); };
+    (function tick(now) {
+      var p = Math.min((now - start) / 1600, 1);
+      el.textContent = Math.round(ease(p) * num).toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+  var statEls = Array.prototype.slice.call(document.querySelectorAll('[data-target]'));
+  if ('IntersectionObserver' in window && statEls.length) {
+    var so = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          animateStat(e.target);
+          so.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    statEls.forEach(function (el) { so.observe(el); });
+  }
+
+  /* Footer signup — mailto notify + inline success */
+  var fs = document.getElementById('footer-signup');
+  if (fs) fs.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var em = (fs.querySelector('[name="signup-email"]') || {}).value || '';
+    if (!em) return;
+    window.location.href = 'mailto:{{email}}?subject=Newsletter+Signup&body=Please+add+me+to+your+mailing+list.%0A%0AEmail:+' + encodeURIComponent(em);
+    fs.innerHTML = '<p style="color:rgba(255,255,255,.85);font-size:14px;padding:10px 0;">Thanks! We\'ll be in touch.</p>';
+  });
+
+  /* Lead form — mailto submit + success state */
+  var lf = document.getElementById('lead-form');
+  if (lf) lf.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var get = function (n) { var el = lf.querySelector('[name="' + n + '"]'); return el ? el.value.trim() : ''; };
+    var name = get('name'), phone = get('phone'), email = get('email'),
+        service = get('service'), property = get('property'), message = get('message');
+    if (!name && !phone) { var fi = lf.querySelector('[required]'); if (fi) fi.focus(); return; }
+    var subject = encodeURIComponent((service || 'General Enquiry') + ' \u2014 Quote Request');
+    var body = encodeURIComponent(
+      'Name: ' + (name || '\u2014') + '\nPhone: ' + (phone || '\u2014') + '\nEmail: ' + (email || '\u2014') +
+      '\nService: ' + (service || 'Not specified') + '\nProperty: ' + (property || 'Not specified') +
+      (message ? '\n\nJob Description:\n' + message : '')
+    );
+    window.location.href = 'mailto:{{email}}?subject=' + subject + '&body=' + body;
+    lf.innerHTML =
+      '<div class="form-top-label">Message Sent</div>' +
+      '<div style="text-align:center;padding:40px 24px;width:100%">' +
+        '<div style="font-size:56px;margin-bottom:14px;color:var(--secondary)">&#10003;</div>' +
+        '<h3 style="font-size:22px;margin-bottom:10px">Thanks' + (name ? ', ' + name.split(' ')[0] : '') + '!</h3>' +
+        '<p style="color:var(--color-muted);margin-bottom:28px;font-size:14px;line-height:1.6">Your request has been sent.<br>We\u2019ll be in touch within 1 business day.</p>' +
+        '<a href="tel:{{phone_tel}}" class="button" style="display:inline-flex;gap:8px;justify-content:center">&#9742;&nbsp;Call Us Now &mdash; {{phone}}</a>' +
+      '</div>';
+  });
+
+  /* Mobile nav — close menu when a link is clicked */
+  var navToggle = document.getElementById('navToggle');
+  document.querySelectorAll('.nav-menu .nav-link').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (navToggle) navToggle.checked = false;
+    });
+  });
+
+  /* Active nav link highlighting via IntersectionObserver */
+  var navLinks = Array.prototype.slice.call(
+    document.querySelectorAll('.nav-menu .nav-link[href^="#"]')
+  );
+  if ('IntersectionObserver' in window && navLinks.length) {
+    var secEls = navLinks
+      .map(function (l) { return document.querySelector(l.getAttribute('href')); })
+      .filter(Boolean);
+    var aio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          navLinks.forEach(function (l) {
+            l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id);
+          });
+        }
+      });
+    }, { threshold: 0.35 });
+    secEls.forEach(function (s) { aio.observe(s); });
+  }
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "websell",
+  "version": "1.0.0",
+  "description": "Cold caller CRM for website sales",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "ts-node admin/server.ts",
+    "lint": "eslint ./src --no-ignore",
+    "generate": "ts-node scripts/generate.ts",
+    "generate:all": "ts-node scripts/generate.ts --all",
+    "preview": "ts-node scripts/preview.ts",
+    "extract-theme": "ts-node scripts/extract-theme.ts",
+    "qa": "ts-node scripts/qa.ts",
+    "validate-client": "ts-node scripts/validate-client.ts",
+    "admin": "ts-node admin/server.ts",
+    "check": "npm run lint && npm run build && npm run generate:all && npm run qa"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "eslint": "^8.57.0",
+    "ts-node-dev": "^2.0.0"
+  }
+}

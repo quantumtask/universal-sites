@@ -1,0 +1,152 @@
+{
+  "id": "daniel",
+  "business_name": "Business Name",
+  "niche": "Roofing",
+  "city": "City Name",
+  "domain": "yourdomain.co.uk",
+  "logo_path": "assets/logo.svg",
+  "phone": "+44 000 000 0000",
+  "email": "hello@yourdomain.co.uk",
+  "headline": "Your powerful hero headline — one sentence that sells the business.",
+  "subheadline": "A short supporting line — who you are, what you do, where you do it.",
+  "about_text": "Write 2–3 sentences about the business. Who you are, how long you have been operating, what makes you different, and who your typical customers are.",
+  "jobs_count": "500+",
+  "jobs_text": "Jobs completed across City Name",
+  "service_area_text": "City Name, Nearby Town, Surrounding Area and beyond.",
+  "services": [
+    {
+      "title": "Service One",
+      "description": "One or two sentences describing this service and the benefit it gives customers."
+    },
+    {
+      "title": "Service Two",
+      "description": "One or two sentences describing this service and the benefit it gives customers."
+    },
+    {
+      "title": "Service Three",
+      "description": "One or two sentences describing this service and the benefit it gives customers."
+    },
+    {
+      "title": "Service Four",
+      "description": "One or two sentences describing this service and the benefit it gives customers."
+    }
+  ],
+  "reviews": [
+    {
+      "name": "J. Smith",
+      "quote": "A short, punchy testimonial quote in the client's own words — one or two sentences.",
+      "role": "Homeowner, City Name"
+    },
+    {
+      "name": "A. Johnson",
+      "quote": "Another testimonial that highlights a different strength — speed, price, professionalism.",
+      "role": "Business Owner, Nearby Town"
+    },
+    {
+      "name": "R. Williams",
+      "quote": "A third testimonial covering trust, reliability or the result they got.",
+      "role": "Property Manager, City Name"
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What areas do you cover?",
+      "answer": "We cover City Name and all surrounding areas within a 20-mile radius."
+    },
+    {
+      "question": "How quickly can you respond?",
+      "answer": "We aim to respond to all enquiries within one business hour and can often offer same-day appointments."
+    },
+    {
+      "question": "Are your team insured and qualified?",
+      "answer": "Yes — all of our team members are fully insured, qualified and identity-checked before starting work."
+    },
+    {
+      "question": "Do you offer free quotes?",
+      "answer": "Absolutely. We provide free, no-obligation quotes for all jobs before any work begins."
+    }
+  ],
+  "differentiators": [
+    "All team members are fully insured, qualified and background-checked before every job.",
+    "We guarantee a response within one hour for all confirmed emergency callouts.",
+    "Every job includes a free inspection of related areas — at no extra cost to you.",
+    "We provide a written quote before starting. The price we quote is the price you pay.",
+    "All work carries a minimum 12-month workmanship guarantee — in writing, every time.",
+    "Full job documentation provided on completion — ideal for landlords and businesses."
+  ],
+  "trust_proof": [
+    "500+ 5-Star Reviews",
+    "Fully Insured & Certified",
+    "Same-Day Availability",
+    "No Hidden Charges"
+  ],
+  "cta_text": "Get a Free Quote",
+  "cta_url": "tel:+440000000000",
+  "hero_cta_text": "Get a Free Quote",
+  "hero_cta_url": "tel:+440000000000",
+  "theme_colors": {
+    "primary": "#1e1e1e",
+    "secondary": "#444444",
+    "accent": "#e8a020",
+    "background": "#f5f5f5",
+    "text": "#111111",
+    "surface": "#ffffff"
+  },
+  "images": {
+    "banner": "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=1920&q=80&auto=format",
+    "about_main": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80&auto=format",
+    "about_side": "https://images.unsplash.com/photo-1611348586840-ea9b7a35b4f9?w=400&q=80&auto=format",
+    "footer_bg": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1920&q=80&auto=format",
+    "form_bg": "https://images.unsplash.com/photo-1562155618-e1a8a5196da0?w=1920&q=80&auto=format"
+  },
+  "pricing": [
+    {
+      "tier": "Starter",
+      "price": "£X",
+      "unit": "from",
+      "features": [
+        "Feature one",
+        "Feature two",
+        "Feature three",
+        "Feature four"
+      ],
+      "highlight": false,
+      "cta": "Get Started"
+    },
+    {
+      "tier": "Popular",
+      "price": "£XX",
+      "unit": "from",
+      "features": [
+        "Everything in Starter",
+        "Feature five",
+        "Feature six",
+        "Feature seven",
+        "Feature eight"
+      ],
+      "highlight": true,
+      "cta": "Choose Popular"
+    },
+    {
+      "tier": "Premium",
+      "price": "£XXX",
+      "unit": "per year",
+      "features": [
+        "Everything in Popular",
+        "Feature nine",
+        "Feature ten",
+        "Feature eleven",
+        "Dedicated account manager"
+      ],
+      "highlight": false,
+      "cta": "Go Premium"
+    }
+  ],
+  "metadata": {
+    "title": "Business Name | Service Type in City Name",
+    "description": "Business Name provides Service Type across City Name and surrounding areas. Write a 1–2 sentence SEO description here.",
+    "locale": "en-GB",
+    "opening_hours": "Mo-Fr 08:00-18:00; Sa 09:00-14:00",
+    "address": "City Name, County/Region"
+  }
+}

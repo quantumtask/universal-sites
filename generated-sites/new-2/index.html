@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Business Name | Service Type in City Name</title>
+<meta name="description" content="Business Name provides Service Type across City Name and surrounding areas. Write a 1–2 sentence SEO description here.">
+<meta property="og:title" content="Business Name | Service Type in City Name">
+<meta property="og:description" content="Business Name provides Service Type across City Name and surrounding areas. Write a 1–2 sentence SEO description here.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=1920&q=80&auto=format">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=1920&q=80&auto=format">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary:   'var(--c-primary)',
+        secondary: 'var(--c-secondary)',
+        accent:    'var(--c-accent)',
+        bg:        'var(--c-bg)',
+        txt:       'var(--c-text)',
+        surface:   'var(--c-surface)',
+      },
+      fontFamily: {
+        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+:root {
+  --c-primary:   #1a3a1a;
+  --c-secondary: #285028;
+  --c-accent:    #84cc16;
+  --c-bg:        #f3f9f0;
+  --c-text:      #101f10;
+  --c-surface:   #ffffff;
+  /* RGB channels for use in rgba() inside generated section styles */
+  --c-accent-rgb: 132, 204, 22;
+}
+
+/* ── Base ──────────────────────────────────────── */
+html { font-family: 'Inter', system-ui, sans-serif; }
+body { color: var(--c-text); background: var(--c-bg); }
+
+/* ── Scroll progress ──────────────────────────── */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+  background: var(--c-accent); width: 0; transition: width 80ms linear;
+}
+
+/* ── Reveal animations ────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal[style*="--i:1"] { transition-delay: .12s; }
+.reveal[style*="--i:2"] { transition-delay: .24s; }
+.reveal[style*="--i:3"] { transition-delay: .36s; }
+.reveal[style*="--i:4"] { transition-delay: .48s; }
+.reveal[style*="--i:5"] { transition-delay: .6s; }
+
+/* ── Navbar glass ─────────────────────────────── */
+.nav-glass {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.nav-glass.scrolled {
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 1px 24px rgba(0,0,0,0.08);
+}
+
+/* ── Hero parallax overlay ────────────────────── */
+.hero-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 60%, transparent 100%);
+}
+
+/* ── Gradient mesh blobs ──────────────────────── */
+.mesh-blob {
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18; pointer-events: none;
+}
+
+/* ── Service card hover ───────────────────────── */
+.service-card {
+  transition: transform 0.35s cubic-bezier(.16,1,.3,1), box-shadow 0.35s ease;
+}
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.10);
+}
+
+/* ── Pricing highlight ring ───────────────────── */
+.pricing-highlight {
+  box-shadow: 0 0 0 2px var(--c-accent), 0 24px 64px rgba(0,0,0,0.10);
+}
+
+/* ── Testimonial card ─────────────────────────── */
+.testi-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.testi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+}
+
+/* ── FAQ accordion ────────────────────────────── */
+.faq-toggle:checked + .faq-label + .faq-body { max-height: 400px; padding-top: 12px; padding-bottom: 16px; opacity: 1; }
+.faq-toggle:checked + .faq-label .faq-chevron { transform: rotate(180deg); }
+.faq-body {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 0.4s cubic-bezier(.16,1,.3,1), opacity 0.3s ease, padding 0.3s ease;
+}
+
+/* ── Float CTA & Back-to-top ──────────────────── */
+.float-btn {
+  opacity: 0; transform: translateY(20px); pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.float-btn.visible { opacity: 1; transform: none; pointer-events: auto; }
+
+/* ── Star rating ──────────────────────────────── */
+.star { color: #f59e0b; }
+
+/* ── Custom scrollbar ─────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+
+/* ── Mobile nav ───────────────────────────────── */
+#navCheck { display: none; }
+@media (max-width: 1023px) {
+  .nav-links {
+    position: fixed; top: 0; right: -100%; width: 80vw; max-width: 360px;
+    height: 100vh; background: white; z-index: 100;
+    flex-direction: column; padding: 80px 32px 32px;
+    transition: right 0.35s cubic-bezier(.16,1,.3,1);
+    box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+  }
+  #navCheck:checked ~ .nav-links { right: 0; }
+  #navCheck:checked ~ .nav-backdrop { display: block; }
+  .nav-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+}
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NAVIGATION
+     ════════════════════════════════════════════════════════════════ -->
+<nav class="nav-glass fixed top-0 inset-x-0 z-50" id="navbar">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 flex items-center justify-between h-[72px]">
+
+    <!-- Logo -->
+    <a href="#hero" class="flex items-center gap-2 shrink-0" aria-label="Business Name home">
+      <img src="assets/logo.svg" alt="Business Name" class="h-9 w-auto" loading="eager">
+    </a>
+
+    <!-- Mobile toggle -->
+    <input type="checkbox" id="navCheck" aria-hidden="true">
+    <label for="navCheck" class="lg:hidden flex flex-col gap-[5px] cursor-pointer z-[110] p-2" aria-label="Menu">
+      <span class="block w-6 h-[2px] bg-primary rounded transition-all"></span>
+      <span class="block w-6 h-[2px] bg-primary rounded transition-all"></span>
+      <span class="block w-4 h-[2px] bg-primary rounded transition-all"></span>
+    </label>
+    <label class="nav-backdrop" for="navCheck"></label>
+
+    <!-- Links -->
+    <div class="nav-links hidden lg:flex items-center gap-8">
+      <a href="#services" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">Services</a>
+      <a href="#standards" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">Standards</a>
+      <a href="#about" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">About</a>
+      <a href="#pricing" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">Pricing</a>
+      <a href="#reviews" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">Reviews</a>
+      <a href="#faq" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">FAQ</a>
+      <a href="#contact" class="nav-link text-sm font-medium text-gray-600 hover:text-primary transition-colors">Contact</a>
+    </div>
+
+    <!-- CTA -->
+    <a href="tel:+440000000000" class="hidden lg:inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:brightness-110 transition-all shadow-lg shadow-accent/25">
+      Get a Free Quote
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex items-center overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=1920&q=80&auto=format" alt="Pest Control services in City Name" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+    <div class="hero-overlay absolute inset-0"></div>
+  </div>
+
+  <!-- Decorative mesh -->
+  <div class="mesh-blob w-[500px] h-[500px] bg-accent -top-40 -right-40 absolute"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 w-full pt-32 pb-20 lg:pt-40 lg:pb-28">
+    <div class="max-w-3xl">
+
+      <!-- Badge -->
+      <div class="reveal inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 mb-8">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        <span class="text-white/90 text-sm font-medium">Pest Control &middot; City Name</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="reveal font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.08] tracking-tight mb-6" style="--i:1">
+        Your powerful hero headline — one sentence that sells the business.
+      </h1>
+
+      <!-- Sub -->
+      <p class="reveal text-lg sm:text-xl text-white/75 max-w-xl mb-10 leading-relaxed" style="--i:2">
+        A short supporting line — who you are, what you do, where you do it.
+      </p>
+
+      <!-- CTAs -->
+      <div class="reveal flex flex-wrap gap-4" style="--i:3">
+        <a href="tel:+440000000000" class="inline-flex items-center gap-2 bg-accent text-white font-semibold px-7 py-3.5 rounded-full text-base hover:brightness-110 transition-all shadow-xl shadow-accent/30">
+          Get a Free Quote
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#about" class="inline-flex items-center gap-2 border border-white/30 text-white font-medium px-7 py-3.5 rounded-full hover:bg-white/10 transition-all">
+          Learn More
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+        </a>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="reveal mt-14 flex flex-wrap gap-8 lg:gap-14" style="--i:4">
+        <div>
+          <div class="text-3xl lg:text-4xl font-bold text-white font-display" data-target="500+">500+</div>
+          <div class="text-white/50 text-sm mt-1">Jobs completed across City Name</div>
+        </div>
+        <div class="w-px bg-white/20 self-stretch hidden sm:block"></div>
+        <div>
+          <div class="text-3xl lg:text-4xl font-bold text-white font-display">24/7</div>
+          <div class="text-white/50 text-sm mt-1">Always available</div>
+        </div>
+        <div class="w-px bg-white/20 self-stretch hidden sm:block"></div>
+        <div>
+          <div class="text-3xl lg:text-4xl font-bold text-white font-display">5.0</div>
+          <div class="text-white/50 text-sm mt-1 flex items-center gap-1">
+            <span class="star">&#9733;</span> Client rating
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-60">
+    <span class="text-white text-xs tracking-widest uppercase">Scroll</span>
+    <div class="w-5 h-8 rounded-full border-2 border-white/40 flex justify-center pt-1.5">
+      <div class="w-1 h-2 bg-white rounded-full animate-bounce"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TRUST STRIP
+     ════════════════════════════════════════════════════════════════ -->
+<div id="trust" class="bg-primary py-4 overflow-hidden">
+  <div class="flex animate-[marquee_25s_linear_infinite] whitespace-nowrap gap-8 px-4">
+    <span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>500+ 5-Star Reviews</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Fully Insured &amp; Certified</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Same-Day Availability</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>No Hidden Charges</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>500+ 5-Star Reviews</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Fully Insured &amp; Certified</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Same-Day Availability</span><span class="inline-flex items-center gap-2 text-white/70 text-sm font-medium whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>No Hidden Charges</span>
+  </div>
+</div>
+<style>
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+</style>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SERVICES
+     ════════════════════════════════════════════════════════════════ -->
+<section id="services" class="relative py-24 lg:py-32 bg-bg overflow-hidden">
+  <!-- Decorative -->
+  <div class="mesh-blob w-[400px] h-[400px] bg-accent top-20 -left-48 absolute"></div>
+
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+
+    <!-- Header -->
+    <div class="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
+      <div>
+        <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">What We Do</span>
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Pest Control Services<br class="hidden sm:block"> in City Name</h2>
+        <p class="text-gray-500 mt-4 max-w-lg leading-relaxed">City Name, Nearby Town, Surrounding Area and beyond.</p>
+      </div>
+      <a href="tel:+440000000000" class="inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-6 py-3 rounded-full hover:brightness-110 transition-all shadow-lg shadow-accent/20 shrink-0 self-start sm:self-auto">
+        Get a Free Quote
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Service cards -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="reveal service-card group bg-surface rounded-2xl overflow-hidden border border-gray-100 hover:border-accent/20" style="--i:0">
+      
+      <div class="p-7">
+        <div class="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all"><svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3 class="font-display text-lg font-bold mb-2">Service One</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">One or two sentences describing this service and the benefit it gives customers.</p>
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+          <span class="text-xs text-gray-400 font-medium">Available 24/7</span>
+          <span class="text-xs font-semibold text-accent bg-accent/10 px-3 py-1 rounded-full">Free Quote</span>
+        </div>
+      </div>
+    </div><div class="reveal service-card group bg-surface rounded-2xl overflow-hidden border border-gray-100 hover:border-accent/20" style="--i:1">
+      
+      <div class="p-7">
+        <div class="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all"><svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <h3 class="font-display text-lg font-bold mb-2">Service Two</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">One or two sentences describing this service and the benefit it gives customers.</p>
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+          <span class="text-xs text-gray-400 font-medium">Available 24/7</span>
+          <span class="text-xs font-semibold text-accent bg-accent/10 px-3 py-1 rounded-full">Free Quote</span>
+        </div>
+      </div>
+    </div><div class="reveal service-card group bg-surface rounded-2xl overflow-hidden border border-gray-100 hover:border-accent/20" style="--i:2">
+      
+      <div class="p-7">
+        <div class="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all"><svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+        <h3 class="font-display text-lg font-bold mb-2">Service Three</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">One or two sentences describing this service and the benefit it gives customers.</p>
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+          <span class="text-xs text-gray-400 font-medium">Available 24/7</span>
+          <span class="text-xs font-semibold text-accent bg-accent/10 px-3 py-1 rounded-full">Free Quote</span>
+        </div>
+      </div>
+    </div><div class="reveal service-card group bg-surface rounded-2xl overflow-hidden border border-gray-100 hover:border-accent/20" style="--i:3">
+      
+      <div class="p-7">
+        <div class="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all"><svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+        <h3 class="font-display text-lg font-bold mb-2">Service Four</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">One or two sentences describing this service and the benefit it gives customers.</p>
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+          <span class="text-xs text-gray-400 font-medium">Available 24/7</span>
+          <span class="text-xs font-semibold text-accent bg-accent/10 px-3 py-1 rounded-full">Free Quote</span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     STANDARDS / WHY CHOOSE US (conditional)
+     ════════════════════════════════════════════════════════════════ -->
+<section id="standards" class="relative py-24 lg:py-32 overflow-hidden" style="background:var(--c-primary)">
+  <!-- subtle dot-grid overlay -->
+  <div class="absolute inset-0 opacity-[0.03]" style="background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:28px 28px;"></div>
+  <!-- radial glow -->
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <div class="w-[700px] h-[500px] rounded-full blur-[120px] opacity-10" style="background:var(--c-accent)"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-5 lg:px-8">
+
+    <!-- Header -->
+    <div class="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-14">
+      <div>
+        <div class="inline-flex items-center gap-2 mb-4">
+          <span class="w-5 h-px bg-[var(--c-accent)]"></span>
+          <span class="text-[var(--c-accent)] text-xs font-bold tracking-[0.2em] uppercase">Why Choose Us</span>
+        </div>
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">Our Standards</h2>
+      </div>
+      <p class="text-white/35 text-sm max-w-xs sm:text-right leading-relaxed hidden sm:block">Every promise we make is backed by our commitment to quality workmanship.</p>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:0">
+      <!-- accent top line -->
+      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <!-- watermark number -->
+      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">01</span>
+      <!-- icon badge -->
+      <div class="relative w-fit">
+        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      </div>
+      <!-- text -->
+      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">All team members are fully insured, qualified and background-checked before every job.</p>
+      <!-- bottom arrow -->
+      <div class="mt-auto flex justify-end">
+        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:1">
+      <!-- accent top line -->
+      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <!-- watermark number -->
+      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">02</span>
+      <!-- icon badge -->
+      <div class="relative w-fit">
+        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      </div>
+      <!-- text -->
+      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">We guarantee a response within one hour for all confirmed emergency callouts.</p>
+      <!-- bottom arrow -->
+      <div class="mt-auto flex justify-end">
+        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:2">
+      <!-- accent top line -->
+      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <!-- watermark number -->
+      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">03</span>
+      <!-- icon badge -->
+      <div class="relative w-fit">
+        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      </div>
+      <!-- text -->
+      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">Every job includes a free inspection of related areas — at no extra cost to you.</p>
+      <!-- bottom arrow -->
+      <div class="mt-auto flex justify-end">
+        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:3">
+      <!-- accent top line -->
+      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <!-- watermark number -->
+      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">04</span>
+      <!-- icon badge -->
+      <div class="relative w-fit">
+        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      </div>
+      <!-- text -->
+      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">We provide a written quote before starting. The price we quote is the price you pay.</p>
+      <!-- bottom arrow -->
+      <div class="mt-auto flex justify-end">
+        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:4">
+      <!-- accent top line -->
+      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <!-- watermark number -->
+      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">05</span>
+      <!-- icon badge -->
+      <div class="relative w-fit">
+        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      </div>
+      <!-- text -->
+      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">All work carries a minimum 12-month workmanship guarantee — in writing, every time.</p>
+      <!-- bottom arrow -->
+      <div class="mt-auto flex justify-end">
+        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:5">
+      <!-- accent top line -->
+      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <!-- watermark number -->
+      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">06</span>
+      <!-- icon badge -->
+      <div class="relative w-fit">
+        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        </div>
+        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      </div>
+      <!-- text -->
+      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">Full job documentation provided on completion — ideal for landlords and businesses.</p>
+      <!-- bottom arrow -->
+      <div class="mt-auto flex justify-end">
+        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div></div>
+  </div>
+
+  <style>
+    .standards-card { transition: transform 0.35s cubic-bezier(.16,1,.3,1), box-shadow 0.35s ease, border-color 0.3s; }
+    .standards-card:hover { transform: translateY(-5px); border-color: rgba(var(--c-accent-rgb, 129,140,248), 0.22); box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(var(--c-accent-rgb, 129,140,248), 0.12); }
+  </style>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     ABOUT
+     ════════════════════════════════════════════════════════════════ -->
+<section id="about" class="py-24 lg:py-32 bg-surface relative overflow-hidden">
+  <div class="mesh-blob w-[500px] h-[500px] bg-secondary -bottom-60 -right-40 absolute"></div>
+
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+      <!-- Images -->
+      <div class="reveal relative">
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1590682680695-43b964a3ae17?w=900&q=80&auto=format" alt="Business Name at work" class="w-full h-[420px] object-cover" loading="lazy">
+        </div>
+        <div class="absolute -bottom-6 -right-6 w-48 h-48 rounded-2xl overflow-hidden border-4 border-surface shadow-xl hidden sm:block">
+          <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400&q=80&auto=format" alt="Pest Control team" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <!-- Accent badge -->
+        <div class="absolute -top-4 -left-4 bg-accent text-white rounded-2xl px-5 py-3 shadow-xl">
+          <div class="text-2xl font-bold font-display">500+</div>
+          <div class="text-xs text-white/80">Jobs Done</div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="reveal" style="--i:1">
+        <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">Who We Are</span>
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+          Business Name — City Name's trusted pest control specialists.
+        </h2>
+        <p class="text-gray-500 leading-relaxed text-lg mb-8">
+          Write 2–3 sentences about the business. Who you are, how long you have been operating, what makes you different, and who your typical customers are.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="tel:+440000000000" class="inline-flex items-center gap-2 bg-accent text-white font-semibold px-6 py-3 rounded-full hover:brightness-110 transition-all shadow-lg shadow-accent/20">
+            Get a Free Quote
+          </a>
+          <a href="tel:+440000000000" class="inline-flex items-center gap-2 border-2 border-primary/15 font-semibold px-6 py-3 rounded-full hover:bg-primary/5 transition-all">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+            Call Us Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     LEAD FORM / CTA SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="lead" class="relative py-24 lg:py-32 overflow-hidden">
+  <!-- BG Image -->
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1920&q=80&auto=format" alt="" class="w-full h-full object-cover" loading="lazy">
+    <div class="absolute inset-0 bg-primary/80 backdrop-blur-sm"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+      <!-- Left text -->
+      <div class="reveal text-white">
+        <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">Get Started Today</span>
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+          Pest Control in City Name — Done Right
+        </h2>
+        <p class="text-white/70 text-lg leading-relaxed mb-8">Contact Business Name today. City Name, Nearby Town, Surrounding Area and beyond.</p>
+        <div class="space-y-3">
+          <p class="text-white/90 font-medium">Serving City Name and surrounding areas. Fast response guaranteed.</p>
+          <p class="text-white/90 font-medium">
+            <a href="tel:+440000000000" class="inline-flex items-center gap-2 hover:text-accent transition-colors">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+              +44 000 000 0000
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Right form -->
+      <div class="reveal" style="--i:1">
+        <form class="bg-white rounded-2xl p-8 shadow-2xl" id="lead-form" novalidate>
+          <div class="text-center mb-6">
+            <h3 class="font-display text-xl font-bold">Request a Free Quote</h3>
+            <p class="text-gray-400 text-sm mt-1">We'll get back to you within 1 business day</p>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1.5" for="lead-name">Your Name</label>
+              <input id="lead-name" type="text" name="name" placeholder="Jane Smith" autocomplete="name" required
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1.5" for="lead-phone">Phone Number</label>
+              <input id="lead-phone" type="tel" name="phone" placeholder="+44 000 000 0000" autocomplete="tel" required
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all">
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600 mb-1.5" for="lead-email">Email Address</label>
+            <input id="lead-email" type="email" name="email" placeholder="your@email.com" autocomplete="email"
+              class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all">
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600 mb-1.5" for="lead-message">Describe the Job</label>
+            <textarea id="lead-message" name="message" placeholder="Briefly describe what you need help with..." rows="3"
+              class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all resize-y"></textarea>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1.5" for="lead-service">Service Type</label>
+              <select id="lead-service" name="service"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all bg-white">
+                <option value="">Select a service&hellip;</option>
+                <option value="Service One">Service One</option>
+<option value="Service Two">Service Two</option>
+<option value="Service Three">Service Three</option>
+<option value="Service Four">Service Four</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1.5" for="lead-property">Property Type</label>
+              <select id="lead-property" name="property"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all bg-white">
+                <option value="">Select type&hellip;</option>
+                <option>Residential</option>
+                <option>Commercial</option>
+                <option>Industrial</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-accent text-white font-semibold py-3 rounded-full hover:brightness-110 transition-all shadow-lg shadow-accent/25">
+            Send My Request &rarr;
+          </button>
+          <p class="text-center text-xs text-gray-400 mt-3">No spam. Your data is safe with us.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FAQ
+     ════════════════════════════════════════════════════════════════ -->
+<section id="faq" class="py-24 lg:py-32 bg-bg">
+  <div class="max-w-3xl mx-auto px-5 lg:px-8">
+
+    <div class="reveal text-center mb-16">
+      <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">FAQ</span>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+        Common Questions
+      </h2>
+    </div>
+
+    <div class="space-y-3">
+      <div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:0">
+      <input type="checkbox" id="faq-0" class="faq-toggle hidden">
+      <label for="faq-0" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-sm pr-4">What areas do you cover?</span>
+        <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </label>
+      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">We cover City Name and all surrounding areas within a 20-mile radius.</div>
+    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:1">
+      <input type="checkbox" id="faq-1" class="faq-toggle hidden">
+      <label for="faq-1" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-sm pr-4">How quickly can you respond?</span>
+        <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </label>
+      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">We aim to respond to all enquiries within one business hour and can often offer same-day appointments.</div>
+    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:2">
+      <input type="checkbox" id="faq-2" class="faq-toggle hidden">
+      <label for="faq-2" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-sm pr-4">Are your team insured and qualified?</span>
+        <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </label>
+      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">Yes — all of our team members are fully insured, qualified and identity-checked before starting work.</div>
+    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:3">
+      <input type="checkbox" id="faq-3" class="faq-toggle hidden">
+      <label for="faq-3" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
+        <span class="font-semibold text-sm pr-4">Do you offer free quotes?</span>
+        <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </label>
+      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">Absolutely. We provide free, no-obligation quotes for all jobs before any work begins.</div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TESTIMONIALS
+     ════════════════════════════════════════════════════════════════ -->
+<section id="reviews" class="py-24 lg:py-32 bg-surface relative overflow-hidden">
+  <div class="mesh-blob w-[400px] h-[400px] bg-accent top-0 right-0 absolute"></div>
+
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 relative">
+
+    <div class="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
+      <div>
+        <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">Testimonials</span>
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">What Our Clients Say</h2>
+      </div>
+      <p class="text-gray-400 text-sm max-w-xs text-right hidden sm:block">Business Name is trusted in City Name for pest control.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="reveal testi-card bg-surface rounded-2xl p-7 border border-gray-100" style="--i:0">
+      <div class="flex gap-0.5 mb-3"><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span></div>
+      <p class="text-gray-600 leading-relaxed mb-6">&ldquo;A short, punchy testimonial quote in the client&#x27;s own words — one or two sentences.&rdquo;</p>
+      <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+        <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-sm shrink-0">J</div>
+        <div>
+          <div class="font-semibold text-sm">J. Smith</div>
+          <div class="text-gray-400 text-xs">Homeowner, City Name</div>
+        </div>
+      </div>
+    </div><div class="reveal testi-card bg-surface rounded-2xl p-7 border border-gray-100" style="--i:1">
+      <div class="flex gap-0.5 mb-3"><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span></div>
+      <p class="text-gray-600 leading-relaxed mb-6">&ldquo;Another testimonial that highlights a different strength — speed, price, professionalism.&rdquo;</p>
+      <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+        <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0">A</div>
+        <div>
+          <div class="font-semibold text-sm">A. Johnson</div>
+          <div class="text-gray-400 text-xs">Business Owner, Nearby Town</div>
+        </div>
+      </div>
+    </div><div class="reveal testi-card bg-surface rounded-2xl p-7 border border-gray-100" style="--i:2">
+      <div class="flex gap-0.5 mb-3"><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span><span class="star text-lg">&#9733;</span></div>
+      <p class="text-gray-600 leading-relaxed mb-6">&ldquo;A third testimonial covering trust, reliability or the result they got.&rdquo;</p>
+      <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+        <div class="w-10 h-10 rounded-full bg-violet-500 text-white flex items-center justify-center font-bold text-sm shrink-0">R</div>
+        <div>
+          <div class="font-semibold text-sm">R. Williams</div>
+          <div class="text-gray-400 text-xs">Property Manager, City Name</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     GALLERY (conditional)
+     ════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     PRICING (conditional)
+     ════════════════════════════════════════════════════════════════ -->
+<section id="pricing" class="py-24 lg:py-32 bg-bg">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="reveal text-center mb-16">
+      <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">Pricing</span>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Simple, Transparent Pricing</h2>
+      <p class="text-gray-500 mt-4 max-w-lg mx-auto">No hidden fees. No surprises. Just clear, upfront pricing.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto"><div class="reveal  bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:0">
+      
+      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Starter</div>
+      <div class="flex items-baseline gap-1 mb-6">
+        <span class="text-sm text-gray-400">from</span>
+        <span class="font-display text-4xl font-bold">£X</span>
+      </div>
+      <ul class="space-y-3 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature one</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature two</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature three</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature four</li>
+      </ul>
+      <a href="tel:+440000000000" class="bg-primary/5 text-primary hover:bg-primary/10 font-semibold py-3 rounded-full text-center text-sm transition-all">
+        Get Started
+      </a>
+    </div><div class="reveal pricing-highlight relative bg-surface rounded-2xl p-8 border border-accent flex flex-col" style="--i:1">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>
+      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Popular</div>
+      <div class="flex items-baseline gap-1 mb-6">
+        <span class="text-sm text-gray-400">from</span>
+        <span class="font-display text-4xl font-bold">£XX</span>
+      </div>
+      <ul class="space-y-3 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Everything in Starter</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature five</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature six</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature seven</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature eight</li>
+      </ul>
+      <a href="tel:+440000000000" class="bg-accent text-white shadow-lg shadow-accent/25 font-semibold py-3 rounded-full text-center text-sm transition-all">
+        Choose Popular
+      </a>
+    </div><div class="reveal  bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:2">
+      
+      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Premium</div>
+      <div class="flex items-baseline gap-1 mb-6">
+        <span class="text-sm text-gray-400">per year</span>
+        <span class="font-display text-4xl font-bold">£XXX</span>
+      </div>
+      <ul class="space-y-3 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Everything in Popular</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature nine</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature ten</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature eleven</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Dedicated account manager</li>
+      </ul>
+      <a href="tel:+440000000000" class="bg-primary/5 text-primary hover:bg-primary/10 font-semibold py-3 rounded-full text-center text-sm transition-all">
+        Go Premium
+      </a>
+    </div></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CONTACT
+     ════════════════════════════════════════════════════════════════ -->
+<section id="contact" class="py-24 lg:py-32 bg-bg">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+
+    <div class="reveal text-center mb-16">
+      <span class="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-3">Get in Touch</span>
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Contact Business Name</h2>
+      <p class="text-gray-500 mt-4 max-w-lg mx-auto">We're ready to help with all your pest control needs in City Name.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Phone -->
+      <a href="tel:+440000000000" class="reveal group bg-surface rounded-2xl p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:0">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <span class="text-xs text-gray-400 uppercase tracking-wider">Call Us</span>
+        <strong class="block text-sm font-semibold mt-1">+44 000 000 0000</strong>
+        <span class="text-accent text-xs font-medium mt-2 inline-block opacity-0 group-hover:opacity-100 transition-opacity">Tap to call &rarr;</span>
+      </a>
+
+      <!-- Email -->
+      <a href="mailto:hello@yourdomain.co.uk" class="reveal group bg-surface rounded-2xl p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:1">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        </div>
+        <span class="text-xs text-gray-400 uppercase tracking-wider">Email Us</span>
+        <strong class="block text-sm font-semibold mt-1">hello@yourdomain.co.uk</strong>
+        <span class="text-accent text-xs font-medium mt-2 inline-block opacity-0 group-hover:opacity-100 transition-opacity">Send message &rarr;</span>
+      </a>
+
+      <!-- Service Area -->
+      <div class="reveal group bg-surface rounded-2xl p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:2">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <span class="text-xs text-gray-400 uppercase tracking-wider">Service Area</span>
+        <strong class="block text-sm font-semibold mt-1">City Name, County/Region</strong>
+      </div>
+
+      <!-- Hours -->
+      <div class="reveal group bg-surface rounded-2xl p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:3">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <span class="text-xs text-gray-400 uppercase tracking-wider">Opening Hours</span>
+        <strong class="block text-sm font-semibold mt-1">Mo-Fr 08:00-18:00; Sa 09:00-14:00</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════════ -->
+<footer class="relative bg-primary text-white overflow-hidden">
+  <!-- BG texture -->
+  <div class="absolute inset-0 opacity-10">
+    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1920&q=80&auto=format" alt="" class="w-full h-full object-cover" loading="lazy">
+  </div>
+
+  <div class="relative z-10">
+    <!-- Main footer -->
+    <div class="max-w-7xl mx-auto px-5 lg:px-8 py-16 lg:py-20">
+      <div class="grid lg:grid-cols-12 gap-12">
+
+        <!-- Brand + Newsletter -->
+        <div class="lg:col-span-5">
+          <img src="assets/logo.svg" alt="Business Name" class="h-8 w-auto mb-6 brightness-0 invert" loading="lazy">
+          <p class="text-white/60 leading-relaxed mb-6 max-w-sm">
+            Get tips, updates and offers from Business Name delivered straight to your inbox.
+          </p>
+          <form class="flex gap-2" id="footer-signup">
+            <input type="email" name="signup-email" placeholder="Your email address" autocomplete="email" required
+              class="flex-1 min-w-0 px-4 py-2.5 rounded-full bg-white/10 border border-white/10 text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40">
+            <button type="submit" class="bg-accent text-white font-semibold px-5 py-2.5 rounded-full text-sm hover:brightness-110 transition-all shrink-0">
+              Subscribe
+            </button>
+          </form>
+        </div>
+
+        <!-- Links -->
+        <div class="lg:col-span-4 grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="text-sm font-semibold uppercase tracking-wider mb-4 text-white/80">About</h4>
+            <div class="flex flex-col gap-2.5">
+              <a href="#about" class="text-white/50 text-sm hover:text-white transition-colors">Who We Are</a>
+              <a href="#reviews" class="text-white/50 text-sm hover:text-white transition-colors">Testimonials</a>
+              <a href="#faq" class="text-white/50 text-sm hover:text-white transition-colors">FAQ</a>
+              <a href="#lead" class="text-white/50 text-sm hover:text-white transition-colors">Get a Quote</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold uppercase tracking-wider mb-4 text-white/80">Services</h4>
+            <div class="flex flex-col gap-2.5">
+              <a href="#services" class="text-white/50 text-sm hover:text-white transition-colors">All Services</a>
+              <a href="#standards" class="text-white/50 text-sm hover:text-white transition-colors">Our Standards</a>
+              <a href="#pricing" class="text-white/50 text-sm hover:text-white transition-colors">Pricing</a>
+              <a href="#contact" class="text-white/50 text-sm hover:text-white transition-colors">Contact Us</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="lg:col-span-3">
+          <h4 class="text-sm font-semibold uppercase tracking-wider mb-4 text-white/80">Contact</h4>
+          <div class="flex flex-col gap-3">
+            <a href="tel:+440000000000" class="text-white/50 text-sm hover:text-white transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+              +44 000 000 0000
+            </a>
+            <a href="mailto:hello@yourdomain.co.uk" class="text-white/50 text-sm hover:text-white transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+              hello@yourdomain.co.uk
+            </a>
+            <span class="text-white/50 text-sm flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              City Name, County/Region
+            </span>
+            <span class="text-white/50 text-sm flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Mo-Fr 08:00-18:00; Sa 09:00-14:00
+            </span>
+          </div>
+
+          <!-- Social icons -->
+          <div class="flex items-center gap-3 mt-6">
+            
+          </div>
+
+          <p class="text-white/30 text-xs mt-6">Pest Control specialists proudly serving City Name and surrounding areas. Licensed &amp; insured.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-5 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <small class="text-white/40 text-xs">&copy; 2026 Business Name. All rights reserved.</small>
+        <small class="text-white/40 text-xs">yourdomain.co.uk &middot; <a href="#privacy" class="hover:text-white transition-colors">Privacy Policy</a></small>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════════
+     PRIVACY
+     ════════════════════════════════════════════════════════════════ -->
+<section id="privacy" class="bg-gray-50 py-12">
+  <div class="max-w-3xl mx-auto px-5">
+    <details class="group">
+      <summary class="cursor-pointer flex items-center justify-between py-3 font-display font-semibold text-lg">
+        Privacy Policy &amp; Data Notice &mdash; Business Name
+        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="grid gap-6 pb-6 text-sm text-gray-500 leading-relaxed">
+        <div><h4 class="font-semibold text-gray-700 mb-1">What we collect</h4><p>When you use our enquiry form, we collect your name, phone number, email address and a description of the job.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Why we collect it</h4><p>Your data is used solely to respond to your service request or to send you relevant updates from Business Name.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Who we share it with</h4><p>Nobody. Your personal data is never sold, rented or shared with any third party.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">How long we keep it</h4><p>Enquiry data is retained for up to 12 months and then securely deleted.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Your rights (UK GDPR)</h4><p>You have the right to access, correct or erase your personal data. Email <a href="mailto:hello@yourdomain.co.uk" class="text-accent underline">hello@yourdomain.co.uk</a>.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Cookies &amp; tracking</h4><p>This website uses no tracking cookies and no third-party analytics.</p></div>
+        <p class="text-xs text-gray-400 pt-2">Last updated 2026 &middot; Business Name, City Name.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FLOATING UI
+     ════════════════════════════════════════════════════════════════ -->
+<a href="#hero" id="backToTop" class="float-btn fixed bottom-6 right-6 z-40 w-11 h-11 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-accent transition-colors" aria-label="Back to top">
+  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"/></svg>
+</a>
+<a href="tel:+440000000000" id="floatCta" class="float-btn fixed bottom-6 left-6 z-40 bg-accent text-white font-semibold text-sm px-5 py-3 rounded-full shadow-xl shadow-accent/30 hover:brightness-110 transition-all">
+  Get a Free Quote
+</a>
+
+<!-- ════════════════════════════════════════════════════════════════
+     INLINE JS
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  var prog = document.getElementById('scrollProgress');
+  var nav  = document.getElementById('navbar');
+  var btt  = document.getElementById('backToTop');
+  var fcta = document.getElementById('floatCta');
+
+  function onScroll() {
+    var s = window.scrollY;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (prog) prog.style.width = (h > 0 ? (s / h) * 100 : 0) + '%';
+    if (nav) nav.classList.toggle('scrolled', s > 50);
+    if (btt) btt.classList.toggle('visible', s > 500);
+    if (fcta) fcta.classList.toggle('visible', s > 800);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* Reveal */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+    reveals.forEach(function (el) { ro.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('visible'); });
+  }
+
+  /* Stat counter */
+  function animateStat(el) {
+    var raw = el.getAttribute('data-target') || el.textContent || '';
+    var num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+    var suffix = raw.replace(/^[\d,.]+/, '').trim();
+    if (isNaN(num) || num === 0) return;
+    var start = performance.now();
+    var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
+    (function tick(now) {
+      var p = Math.min((now - start) / 1600, 1);
+      el.textContent = Math.round(ease(p) * num).toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+  var statEls = Array.prototype.slice.call(document.querySelectorAll('[data-target]'));
+  if ('IntersectionObserver' in window && statEls.length) {
+    var so = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { animateStat(e.target); so.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    statEls.forEach(function (el) { so.observe(el); });
+  }
+
+  /* Footer signup */
+  var fs = document.getElementById('footer-signup');
+  if (fs) fs.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var em = (fs.querySelector('[name="signup-email"]') || {}).value || '';
+    if (!em) return;
+    window.location.href = 'mailto:hello@yourdomain.co.uk?subject=Newsletter+Signup&body=Please+add+me+to+your+mailing+list.%0A%0AEmail:+' + encodeURIComponent(em);
+    fs.innerHTML = '<p class="text-white/60 text-sm py-2">Thanks! We\'ll be in touch.</p>';
+  });
+
+  /* Lead form */
+  var lf = document.getElementById('lead-form');
+  if (lf) lf.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var get = function (n) { var el = lf.querySelector('[name="' + n + '"]'); return el ? el.value.trim() : ''; };
+    var name = get('name'), phone = get('phone'), email = get('email'),
+        service = get('service'), property = get('property'), message = get('message');
+    if (!name && !phone) { var fi = lf.querySelector('[required]'); if (fi) fi.focus(); return; }
+    var subject = encodeURIComponent((service || 'General Enquiry') + ' \u2014 Quote Request');
+    var body = encodeURIComponent(
+      'Name: ' + (name || '\u2014') + '\nPhone: ' + (phone || '\u2014') + '\nEmail: ' + (email || '\u2014') +
+      '\nService: ' + (service || 'Not specified') + '\nProperty: ' + (property || 'Not specified') +
+      (message ? '\n\nJob Description:\n' + message : '')
+    );
+    window.location.href = 'mailto:hello@yourdomain.co.uk?subject=' + subject + '&body=' + body;
+    lf.innerHTML =
+      '<div class="text-center py-10">' +
+        '<div class="text-5xl mb-4 text-accent">&#10003;</div>' +
+        '<h3 class="font-display text-xl font-bold mb-2">Thanks' + (name ? ', ' + name.split(' ')[0] : '') + '!</h3>' +
+        '<p class="text-gray-400 text-sm mb-6">Your request has been sent. We\u2019ll be in touch within 1 business day.</p>' +
+        '<a href="tel:+440000000000" class="inline-flex items-center gap-2 bg-accent text-white font-semibold px-6 py-3 rounded-full">&#9742; Call Us Now</a>' +
+      '</div>';
+  });
+
+  /* Close mobile nav on link click */
+  var navCheck = document.getElementById('navCheck');
+  document.querySelectorAll('.nav-links .nav-link').forEach(function (a) {
+    a.addEventListener('click', function () { if (navCheck) navCheck.checked = false; });
+  });
+
+  /* Active nav highlighting */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links .nav-link[href^="#"]'));
+  if ('IntersectionObserver' in window && navLinks.length) {
+    var secEls = navLinks.map(function (l) { return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+    var aio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          navLinks.forEach(function (l) { l.classList.toggle('!text-accent', l.getAttribute('href') === '#' + e.target.id); });
+        }
+      });
+    }, { threshold: 0.35 });
+    secEls.forEach(function (s) { aio.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

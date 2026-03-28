@@ -1,0 +1,55 @@
+{
+  "id": "plumbify-london",
+  "business_name": "Plumbify Services",
+  "niche": "Emergency Plumbing",
+  "city": "London",
+  "domain": "plumbifyservices.co.uk",
+  "logo_path": "assets/logo.svg",
+  "phone": "+44 20 8100 1234",
+  "email": "hello@plumbifyservices.co.uk",
+  "headline": "Local London plumbers on-call in 30 minutes or less",
+  "subheadline": "Premium leak repairs, burst pipes and boiler servicing with fixed upfront pricing.",
+  "about_text": "Plumbify Services protects London homes and businesses from water damage with fast teams and 100% satisfaction follow-up.",
+  "services": [
+    { "title": "Emergency Flood Response", "description": "Immediate shutoff and leak containment with full system service." },
+    { "title": "Pipe Repression & Repointing", "description": "Water-safe pipe replacers and welders for old and modern systems." },
+    { "title": "Smart Leak Detection", "description": "Infrared diagnostics and pressure tests for hidden pipe failures." }
+  ],
+  "reviews": [
+    { "name": "Hannah T.", "quote": "Fast, professional, and clean work—saved us from severe basement flooding.", "role": "Homeowner" },
+    { "name": "Richard K.", "quote": "I love the same-day booking and fixed price, no surprises.", "role": "Landlord" }
+  ],
+  "faqs": [
+    { "question": "What’s your response time?", "answer": "We target 30 minutes for all London emergency calls." },
+    { "question": "Do you offer a service guarantee?", "answer": "Yes, all work has a 2-year measured workmanship guarantee." }
+  ],
+  "service_area_text": "Covering all London boroughs, from Canary Wharf to Camden, in every weather.",
+  "differentiators": [
+    "24/7 rapid deployment from multiple London hubs",
+    "Fully insured & DBS-checked technicians",
+    "No call-out fees for confirmed jobs"
+  ],
+  "trust_proof": [
+    "4.92 stars on local review platforms",
+    "Member of City Plumbing Safety Alliance",
+    "10-year structural leak award"
+  ],
+  "cta_text": "Request an urgent visit",
+  "cta_url": "tel:+442081001234",
+  "theme_colors": {
+    "primary": "#1e3a5f",
+    "secondary": "#2563eb",
+    "accent": "#e85d04",
+    "background": "#f8f9ff",
+    "text": "#0d1b2a",
+    "surface": "#ffffff"
+  },
+  "metadata": {
+    "title": "Plumbify Services | London Emergency Plumbing",
+    "description": "Plumbify delivers same-day emergency plumbing across London with fixed pricing and 24/7 teams.",
+    "locale": "en-GB",
+    "currency": "GBP",
+    "opening_hours": "Mo-Su 00:00-23:59",
+    "address": "Multiple stations across London"
+  }
+}

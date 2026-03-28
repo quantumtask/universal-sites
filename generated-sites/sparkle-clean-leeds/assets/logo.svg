@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60">
+  <!-- Star sparkle mark: 4-pointed diamond star -->
+  <path d="M24 4 L27 20 L40 24 L27 28 L24 44 L21 28 L8 24 L21 20 Z" fill="#1d6b4f"/>
+  <!-- Small sparkle dots -->
+  <circle cx="38" cy="10" r="2.5" fill="#2e9e76" opacity="0.8"/>
+  <circle cx="10" cy="12" r="1.8" fill="#a8e6cf" opacity="0.9"/>
+  <circle cx="40" cy="38" r="2" fill="#1d6b4f" opacity="0.6"/>
+  <!-- Wordmark -->
+  <text x="50" y="24" font-family="'Segoe UI',Arial,sans-serif" font-weight="900" font-size="17" fill="#1d6b4f" letter-spacing="-0.4">SPARKLE</text>
+  <text x="50" y="41" font-family="'Segoe UI',Arial,sans-serif" font-weight="900" font-size="14" fill="#2e9e76" letter-spacing="-0.3">CLEAN</text>
+  <text x="50" y="54" font-family="'Segoe UI',Arial,sans-serif" font-weight="700" font-size="7.5" fill="#1d6b4f" letter-spacing="1.8">LEEDS</text>
+</svg>

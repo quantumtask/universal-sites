@@ -1,0 +1,88 @@
+{
+  "id": "volt-response-manchester",
+  "business_name": "Volt Response",
+  "niche": "Emergency Electricians",
+  "city": "Manchester",
+  "domain": "voltresponse.co.uk",
+  "logo_path": "assets/logo.svg",
+  "phone": "+44 161 555 4400",
+  "email": "help@voltresponse.co.uk",
+  "headline": "Manchester's fastest emergency electricians — NICEIC certified, same-hour response, available 24/7.",
+  "subheadline": "Manchester's most trusted emergency electricians.",
+  "about_text": "Volt Response handles fuse-box failures, power outages, rewiring emergencies and EV charger faults across Manchester and Greater Manchester. Our certified electricians are on call 24 hours a day, seven days a week — no call-out charge, guaranteed.",
+  "services": [
+    { "title": "Fuse Board & Consumer Unit Repair", "description": "Emergency fuse-box upgrades and consumer unit replacements for homes and commercial premises across Manchester." },
+    { "title": "Power Fault & Outage Response", "description": "Rapid diagnosis and restoration of total or partial power loss — businesses and families back online fast." },
+    { "title": "Commercial & Landlord Electricals", "description": "EICR certificates, emergency callouts and compliance reports for letting agents, HMOs and housing portfolios." }
+  ],
+  "reviews": [
+    { "name": "James K.", "quote": "Power came back on within the hour. Volt Response were brilliant — calm, professional and no mess left behind.", "body": "Had a complete power failure on a Sunday evening. Volt Response arrived in under 45 minutes, diagnosed a faulty consumer unit and had us back up and running the same night. Exceptional service.", "role": "Homeowner, Salford" },
+    { "name": "Rachel T.", "quote": "Transparent pricing, explained every step, fixed the fault first time.", "body": "After a kitchen appliance tripped the entire board, I called Volt Response at 11pm. The engineer arrived promptly, gave me a clear written quote before touching anything, and resolved the issue without any fuss.", "role": "Landlord, Manchester" },
+    { "name": "Stuart B.", "quote": "Full EICR and compliance report on the same day. Exactly what our rental portfolio needed.", "body": "Managing 40 rental units, I need an electrician I can rely on at short notice. Volt Response consistently turns up on time, prices fairly and provides full documentation every single time.", "role": "Property Manager, Stockport" }
+  ],
+  "faqs": [
+    { "question": "Are your electricians NICEIC certified and insured?", "answer": "Yes — all engineers carry current NICEIC registration and full public liability insurance on every visit." },
+    { "question": "How quickly can you reach me in Manchester?", "answer": "We aim to arrive within 60 minutes for all confirmed emergency callouts across Greater Manchester." },
+    { "question": "Is the electrical work guaranteed?", "answer": "All electrical repairs carry a minimum 10-year workmanship guarantee — in writing, every time." }
+  ],
+  "differentiators": [
+    "All electricians are NICEIC certified, identity-checked and carry full public liability insurance on every visit.",
+    "We guarantee arrival within one hour for all confirmed emergency callouts across Manchester and Greater Manchester.",
+    "Every visit includes a complimentary visual safety check of your consumer unit and visible wiring — at no extra cost.",
+    "You receive a written quote before any work starts. The price we quote is the price you pay — no hidden fees, no surprises.",
+    "All work carries a minimum 10-year workmanship guarantee. If a fault recurs in the warranty period, we return free of charge.",
+    "Full EICR and compliance documentation issued for every job — ideal for landlords, letting agents and housing associations."
+  ],
+  "jobs_count": "800+",
+  "jobs_text": "Electrical jobs completed across Manchester",
+  "service_area_text": "Manchester, Salford, Stockport, Oldham, Bury, Bolton and surrounding Greater Manchester areas.",
+  "cta_text": "Call Now — Available 24/7",
+  "cta_url": "tel:+441615554400",
+  "images": {
+    "banner": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&q=85&auto=format",
+    "service1": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=480&q=85&auto=format",
+    "service2": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=480&q=85&auto=format",
+    "service3": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=480&q=85&auto=format"
+  },
+  "pricing": [
+    {
+      "tier": "Emergency Call-Out",
+      "price": "£89",
+      "unit": "from",
+      "features": ["1-hour response guarantee", "NICEIC certified electrician", "Fixed-price repair quote", "No call-out charge"],
+      "highlight": false,
+      "cta": "Book Emergency"
+    },
+    {
+      "tier": "EICR + Repair",
+      "price": "£179",
+      "unit": "from",
+      "features": ["Full EICR certificate", "Same-day emergency repair", "10-year workmanship warranty", "Landlord-ready documentation", "Priority dispatch"],
+      "highlight": true,
+      "cta": "Book EICR Package"
+    },
+    {
+      "tier": "Annual Safety Plan",
+      "price": "£449",
+      "unit": "per year",
+      "features": ["Unlimited emergency call-outs", "Annual full EICR inspection", "Consumer unit health check", "Dedicated account manager", "Priority SMS alerts"],
+      "highlight": false,
+      "cta": "Get Annual Plan"
+    }
+  ],
+  "theme_colors": {
+    "primary": "#1a3a5c",
+    "secondary": "#f0a500",
+    "accent": "#f0a500",
+    "background": "#f8f9fb",
+    "text": "#111827",
+    "surface": "#ffffff"
+  },
+  "metadata": {
+    "title": "Volt Response | Manchester Emergency Electricians",
+    "description": "Volt Response provides 24/7 emergency electrical services across Manchester and Greater Manchester. NICEIC certified, same-hour response, insurance-approved.",
+    "locale": "en-GB",
+    "opening_hours": "Mo-Su 00:00-23:59",
+    "address": "Manchester City Centre, Greater Manchester"
+  }
+}

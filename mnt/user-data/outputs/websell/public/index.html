@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebSell CRM</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">Web<span>Sell</span></div>
+    <nav>
+      <button class="active" data-tab="pipeline">Pipeline</button>
+      <button data-tab="leaderboard">Leaderboard</button>
+    </nav>
+    <div class="header-right">
+      <button class="btn btn-primary" id="btn-new">+ New Deal</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- STATS BAR -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Deals</div>
+        <div class="stat-value" id="stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Closed Won</div>
+        <div class="stat-value green" id="stat-won">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Hot Pipeline</div>
+        <div class="stat-value amber" id="stat-pipeline">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue Won</div>
+        <div class="stat-value green" id="stat-revenue">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Margin</div>
+        <div class="stat-value green" id="stat-margin">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Margin %</div>
+        <div class="stat-value" id="stat-margin-pct">—</div>
+      </div>
+    </div>
+
+    <!-- PIPELINE TAB -->
+    <div class="panel active" id="panel-pipeline">
+
+      <div class="filters">
+        <input class="filter-input" id="filter-q" placeholder="Search business, contact, phone…" />
+        <select class="filter-input" id="filter-status">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="interested">Interested</option>
+          <option value="quoted">Quoted</option>
+          <option value="closed_won">Closed Won</option>
+          <option value="closed_lost">Closed Lost</option>
+        </select>
+        <select class="filter-input" id="filter-caller">
+          <option value="">All callers</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Phone</th>
+              <th>Caller</th>
+              <th>Status</th>
+              <th>Quote</th>
+              <th>Cost</th>
+              <th>Margin</th>
+              <th>Notes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="deals-tbody">
+            <tr><td colspan="9" class="empty">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD TAB -->
+    <div class="panel" id="panel-leaderboard">
+      <div class="section-title">Caller Leaderboard — Margin Generated</div>
+      <div class="leaderboard" id="leaderboard-list"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

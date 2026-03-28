@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="{{locale}}" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{og_image}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{og_image}}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary:   'var(--c-primary)',
+        secondary: 'var(--c-secondary)',
+        accent:    'var(--c-accent)',
+        bg:        'var(--c-bg)',
+        txt:       'var(--c-text)',
+        surface:   'var(--c-surface)',
+      },
+      fontFamily: {
+        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+/* ── Theme tokens ──────────────────────────────── */
+:root {
+  --c-primary:    {{color_primary}};
+  --c-secondary:  {{color_secondary}};
+  --c-accent:     {{color_accent}};
+  --c-bg:         {{color_background}};
+  --c-text:       {{color_text}};
+  --c-surface:    {{color_surface}};
+  --c-accent-rgb: {{color_accent_rgb}};
+  --nav-h: 68px;
+}
+
+/* ── Base ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { font-family: 'Inter', system-ui, sans-serif; -webkit-text-size-adjust: 100%; }
+body { color: var(--c-text); background: var(--c-bg); overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
+
+/* Scroll lock when nav open */
+body.nav-open { overflow: hidden; }
+
+/* ── Scroll progress ───────────────────────────── */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+  background: var(--c-accent); width: 0; transition: width 80ms linear;
+}
+
+/* ── Reveal animations ─────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(.16,1,.3,1), transform 0.65s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal[style*="--i:1"] { transition-delay: .1s; }
+.reveal[style*="--i:2"] { transition-delay: .2s; }
+.reveal[style*="--i:3"] { transition-delay: .3s; }
+.reveal[style*="--i:4"] { transition-delay: .4s; }
+.reveal[style*="--i:5"] { transition-delay: .5s; }
+
+/* ── Navbar glass ──────────────────────────────── */
+.nav-glass {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.nav-glass.scrolled {
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+}
+
+/* ── Mobile drawer ─────────────────────────────── */
+.nav-drawer {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(80vw, 340px);
+  height: 100dvh;
+  background: #fff;
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.38s cubic-bezier(.16,1,.3,1);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-h) + 24px) 28px 40px;
+  box-shadow: -12px 0 48px rgba(0,0,0,0.14);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.nav-drawer.open { transform: translateX(0); }
+
+/* Drawer backdrop */
+.nav-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.nav-backdrop.open { opacity: 1; pointer-events: auto; }
+
+/* Drawer links */
+.drawer-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0;
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--c-primary);
+  border-bottom: 1px solid #f1f5f9;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.drawer-link:last-of-type { border-bottom: none; }
+.drawer-link:hover { color: var(--c-accent); }
+
+/* Hamburger → X */
+.burger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; -webkit-tap-highlight-color: transparent; }
+.burger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--c-primary); border-radius: 2px;
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(.16,1,.3,1), opacity 0.2s, width 0.2s;
+}
+.burger span:nth-child(3) { width: 16px; }
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); width: 24px; }
+.burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); width: 24px; }
+
+/* ── Hero ──────────────────────────────────────── */
+.hero-overlay {
+  background: linear-gradient(160deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.2) 100%);
+}
+
+/* ── Mesh blob ─────────────────────────────────── */
+.mesh-blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); opacity: 0.16; pointer-events: none;
+}
+
+/* ── Service card ──────────────────────────────── */
+.service-card {
+  transition: transform 0.35s cubic-bezier(.16,1,.3,1), box-shadow 0.35s ease;
+}
+@media (hover: hover) {
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.10); }
+}
+
+/* ── Pricing ───────────────────────────────────── */
+.pricing-highlight {
+  box-shadow: 0 0 0 2px var(--c-accent), 0 24px 64px rgba(0,0,0,0.10);
+}
+
+/* ── Testimonial ───────────────────────────────── */
+.testi-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+@media (hover: hover) {
+  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+}
+
+/* ── FAQ accordion ─────────────────────────────── */
+.faq-toggle:checked + .faq-label + .faq-body {
+  max-height: 600px; padding-top: 12px; padding-bottom: 18px; opacity: 1;
+}
+.faq-toggle:checked + .faq-label .faq-chevron { transform: rotate(180deg); }
+.faq-body {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 0.45s cubic-bezier(.16,1,.3,1), opacity 0.3s ease, padding 0.3s ease;
+}
+
+/* ── Float buttons ─────────────────────────────── */
+.float-btn {
+  opacity: 0; transform: translateY(16px); pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.float-btn.visible { opacity: 1; transform: none; pointer-events: auto; }
+
+/* Prevent float CTA + back-to-top overlapping on small screens */
+@media (max-width: 480px) {
+  #floatCta { font-size: 0.8rem; padding: 10px 16px; bottom: 16px; left: 16px; }
+  #backToTop { bottom: 16px; right: 16px; width: 40px; height: 40px; }
+}
+
+/* ── Star ──────────────────────────────────────── */
+.star { color: #f59e0b; }
+
+/* ── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+
+/* ── Touch targets (min 44px) ──────────────────── */
+a, button, label[for] { min-height: 44px; }
+nav a, nav button { min-height: unset; }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NAVIGATION
+     ════════════════════════════════════════════════════════════════ -->
+<nav class="nav-glass fixed top-0 inset-x-0 z-[150]" id="navbar" style="height:var(--nav-h)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
+
+    <!-- Logo -->
+    <a href="#hero" class="flex items-center shrink-0 min-h-0" aria-label="{{business_name}} home">
+      <img src="{{logo_path}}" alt="{{business_name}}" class="h-8 sm:h-9 w-auto" loading="eager">
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden lg:flex items-center gap-7 xl:gap-9">
+      <a href="#services" class="nav-link text-sm font-medium text-gray-500 hover:text-primary transition-colors">Services</a>
+      {{tw_standards_nav}}
+      <a href="#about" class="nav-link text-sm font-medium text-gray-500 hover:text-primary transition-colors">About</a>
+      {{tw_pricing_nav}}
+      <a href="#reviews" class="nav-link text-sm font-medium text-gray-500 hover:text-primary transition-colors">Reviews</a>
+      <a href="#faq" class="nav-link text-sm font-medium text-gray-500 hover:text-primary transition-colors">FAQ</a>
+      <a href="#contact" class="nav-link text-sm font-medium text-gray-500 hover:text-primary transition-colors">Contact</a>
+    </div>
+
+    <!-- Desktop CTA -->
+    <a href="{{cta_url}}" class="hidden lg:inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:brightness-110 transition-all shadow-md shadow-accent/20 shrink-0 min-h-0">
+      {{cta_text}}
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <!-- Mobile: phone pill + burger -->
+    <div class="flex items-center gap-2 lg:hidden">
+      <a href="tel:{{phone_tel}}" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border border-gray-200 text-primary hover:bg-gray-50 transition-colors min-h-0" aria-label="Call us">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+        Call
+      </a>
+      <button class="burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile backdrop -->
+<div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <!-- Drawer header -->
+  <div class="flex items-center justify-between mb-6 pb-5 border-b border-gray-100">
+    <img src="{{logo_path}}" alt="{{business_name}}" class="h-7 w-auto" loading="lazy">
+    <button class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors" id="closeDrawer" aria-label="Close menu">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Links -->
+  <nav class="flex-1" aria-label="Mobile navigation">
+    <a href="#services" class="drawer-link">Services <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+    {{tw_standards_nav_drawer}}
+    <a href="#about" class="drawer-link">About <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+    {{tw_pricing_nav_drawer}}
+    <a href="#reviews" class="drawer-link">Reviews <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+    <a href="#faq" class="drawer-link">FAQ <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+    <a href="#contact" class="drawer-link">Contact <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+  </nav>
+
+  <!-- Drawer CTA -->
+  <div class="mt-6 pt-6 border-t border-gray-100 space-y-3">
+    <a href="{{cta_url}}" class="flex items-center justify-center gap-2 bg-accent text-white font-semibold py-3.5 rounded-full text-sm hover:brightness-110 transition-all shadow-lg shadow-accent/20">
+      {{cta_text}}
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="tel:{{phone_tel}}" class="flex items-center justify-center gap-2 border-2 border-gray-100 font-semibold py-3.5 rounded-full text-sm hover:bg-gray-50 transition-all">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+      {{phone}}
+    </a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════════════════════ -->
+<section id="hero" class="relative min-h-[100dvh] flex items-end sm:items-center overflow-hidden">
+  <!-- BG image -->
+  <div class="absolute inset-0">
+    <img src="{{banner_img_url}}" alt="{{niche}} services in {{city}}" class="w-full h-full object-cover object-center" loading="eager" fetchpriority="high">
+    <div class="hero-overlay absolute inset-0"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(var(--nav-h)+48px)] pb-12 sm:py-28 lg:py-36">
+    <div class="max-w-2xl">
+
+      <!-- Badge -->
+      <div class="reveal inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-3.5 py-1.5 mb-5 sm:mb-7">
+        <span class="w-2 h-2 rounded-full bg-green-400 shrink-0" style="animation:pulse 2s infinite"></span>
+        <span class="text-white/90 text-xs sm:text-sm font-medium">{{niche}} &middot; {{city}}</span>
+      </div>
+      <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
+
+      <!-- H1 -->
+      <h1 class="reveal font-display text-[2rem] sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-5 sm:mb-6" style="--i:1">
+        {{headline}}
+      </h1>
+
+      <!-- Sub -->
+      <p class="reveal text-base sm:text-lg text-white/70 max-w-lg mb-8 leading-relaxed" style="--i:2">
+        {{subheadline}}
+      </p>
+
+      <!-- CTAs -->
+      <div class="reveal flex flex-col sm:flex-row gap-3" style="--i:3">
+        <a href="{{hero_cta_url}}" class="inline-flex items-center justify-center gap-2 bg-accent text-white font-semibold px-6 py-3.5 rounded-full text-sm sm:text-base hover:brightness-110 transition-all shadow-xl shadow-accent/30">
+          {{hero_cta_text}}
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#about" class="inline-flex items-center justify-center gap-2 border border-white/30 text-white font-medium px-6 py-3.5 rounded-full text-sm sm:text-base hover:bg-white/10 transition-all">
+          Learn More
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="reveal mt-10 sm:mt-14 grid grid-cols-3 gap-4 sm:gap-8 max-w-sm sm:max-w-none" style="--i:4">
+        <div class="text-center sm:text-left">
+          <div class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white" data-target="{{jobs_count}}">{{jobs_count}}</div>
+          <div class="text-white/50 text-xs sm:text-sm mt-1 leading-tight">{{jobs_text}}</div>
+        </div>
+        <div class="text-center sm:text-left">
+          <div class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white">24/7</div>
+          <div class="text-white/50 text-xs sm:text-sm mt-1 leading-tight">Always available</div>
+        </div>
+        <div class="text-center sm:text-left">
+          <div class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white">5.0</div>
+          <div class="text-white/50 text-xs sm:text-sm mt-1 flex items-center justify-center sm:justify-start gap-1">
+            <span class="star text-xs">&#9733;</span> Rating
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator – hidden on small screens -->
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-2 opacity-50">
+    <span class="text-white text-[10px] tracking-widest uppercase">Scroll</span>
+    <div class="w-5 h-8 rounded-full border-2 border-white/40 flex justify-center pt-1.5">
+      <div class="w-1 h-2 bg-white rounded-full" style="animation:bounce 1.5s infinite"></div>
+    </div>
+  </div>
+  <style>@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}</style>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TRUST STRIP
+     ════════════════════════════════════════════════════════════════ -->
+<div id="trust" class="bg-primary py-3 sm:py-4 overflow-hidden">
+  <div class="flex gap-8 sm:gap-12 px-4 whitespace-nowrap" style="animation:marquee 28s linear infinite">
+    {{tw_trust_marquee}}
+  </div>
+</div>
+<style>@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SERVICES
+     ════════════════════════════════════════════════════════════════ -->
+<section id="services" class="relative py-16 sm:py-24 lg:py-32 bg-bg overflow-hidden">
+  <div class="mesh-blob w-72 h-72 sm:w-96 sm:h-96 bg-accent -top-24 -left-24 sm:-left-40"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="reveal mb-10 sm:mb-14">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
+        <div>
+          <span class="inline-block text-accent text-xs sm:text-sm font-semibold tracking-widest uppercase mb-2 sm:mb-3">What We Do</span>
+          <h2 class="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight">{{niche}} Services<br class="hidden sm:block"> in {{city}}</h2>
+          <p class="text-gray-500 mt-3 text-sm sm:text-base leading-relaxed max-w-lg">{{service_area_text}}</p>
+        </div>
+        <a href="{{cta_url}}" class="inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-5 py-3 rounded-full hover:brightness-110 transition-all shadow-md shadow-accent/20 shrink-0 self-start sm:self-auto min-h-0">
+          Free Quote
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {{tw_services}}
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     STANDARDS (conditional)
+     ════════════════════════════════════════════════════════════════ -->
+{{tw_standards_section}}
+
+<!-- ════════════════════════════════════════════════════════════════
+     ABOUT
+     ════════════════════════════════════════════════════════════════ -->
+<section id="about" class="py-16 sm:py-24 lg:py-32 bg-surface relative overflow-hidden">
+  <div class="mesh-blob w-72 h-72 bg-secondary -bottom-32 -right-20 hidden sm:block"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+
+      <!-- Images — stacked on mobile, overlapping on desktop -->
+      <div class="reveal relative">
+        <div class="relative rounded-2xl overflow-hidden shadow-xl">
+          <img src="{{about_img_large}}" alt="{{business_name}} at work" class="w-full h-64 sm:h-80 lg:h-[420px] object-cover" loading="lazy">
+        </div>
+        <!-- Overlapping thumbnail — only on sm+ -->
+        <div class="hidden sm:block absolute -bottom-5 -right-5 w-36 sm:w-44 h-36 sm:h-44 rounded-2xl overflow-hidden border-4 border-surface shadow-xl">
+          <img src="{{about_img_small}}" alt="{{niche}} team" class="w-full h-full object-cover" loading="lazy">
+        </div>
+        <!-- Stat badge -->
+        <div class="absolute -top-4 -left-3 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
+          <div class="text-xl sm:text-2xl font-bold font-display">{{jobs_count}}</div>
+          <div class="text-xs text-white/80">Jobs Done</div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="reveal" style="--i:1">
+        <span class="inline-block text-accent text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3">Who We Are</span>
+        <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight mb-5 sm:mb-6 leading-tight">
+          {{about_headline}}
+        </h2>
+        <p class="text-gray-500 leading-relaxed text-base sm:text-lg mb-7 sm:mb-8">
+          {{about_text}}
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="{{cta_url}}" class="inline-flex items-center justify-center gap-2 bg-accent text-white font-semibold px-6 py-3.5 rounded-full hover:brightness-110 transition-all shadow-md shadow-accent/20 text-sm sm:text-base min-h-0">
+            {{cta_text}}
+          </a>
+          <a href="tel:{{phone_tel}}" class="inline-flex items-center justify-center gap-2 border-2 border-gray-100 font-semibold px-6 py-3.5 rounded-full hover:bg-gray-50 transition-all text-sm sm:text-base min-h-0">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+            Call Us Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     LEAD FORM
+     ════════════════════════════════════════════════════════════════ -->
+<section id="lead" class="relative py-16 sm:py-24 lg:py-32 overflow-hidden">
+  <div class="absolute inset-0">
+    <img src="{{form_bg_url}}" alt="" class="w-full h-full object-cover" loading="lazy">
+    <div class="absolute inset-0 bg-primary/82 backdrop-blur-sm"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-20 items-start">
+
+      <!-- Left text -->
+      <div class="reveal text-white">
+        <span class="inline-block text-accent text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3">Get Started Today</span>
+        <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight mb-5 sm:mb-6">{{cta_headline}}</h2>
+        <p class="text-white/65 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8">{{cta_body}}</p>
+        <div class="space-y-3">
+          <p class="text-white/80 text-sm font-medium">Serving {{city}} and surrounding areas.</p>
+          <a href="tel:{{phone_tel}}" class="inline-flex items-center gap-2 text-white font-semibold hover:text-accent transition-colors text-sm sm:text-base min-h-0">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+            {{phone}}
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="reveal" style="--i:1">
+        <form class="bg-white rounded-2xl p-5 sm:p-8 shadow-2xl" id="lead-form" novalidate>
+          <div class="text-center mb-5 sm:mb-6">
+            <h3 class="font-display text-lg sm:text-xl font-bold">Request a Free Quote</h3>
+            <p class="text-gray-400 text-xs sm:text-sm mt-1">We'll get back to you within 1 business day</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <div>
+              <label class="block text-xs sm:text-sm font-medium text-gray-600 mb-1.5" for="lead-name">Your Name</label>
+              <input id="lead-name" type="text" name="name" placeholder="Jane Smith" autocomplete="name" required
+                class="w-full px-3.5 sm:px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-accent transition-all" style="--tw-ring-color:rgba(var(--c-accent-rgb),.3)">
+            </div>
+            <div>
+              <label class="block text-xs sm:text-sm font-medium text-gray-600 mb-1.5" for="lead-phone">Phone Number</label>
+              <input id="lead-phone" type="tel" name="phone" placeholder="{{phone}}" autocomplete="tel" required
+                class="w-full px-3.5 sm:px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-accent transition-all" style="--tw-ring-color:rgba(var(--c-accent-rgb),.3)">
+            </div>
+          </div>
+
+          <div class="mb-3 sm:mb-4">
+            <label class="block text-xs sm:text-sm font-medium text-gray-600 mb-1.5" for="lead-email">Email Address</label>
+            <input id="lead-email" type="email" name="email" placeholder="your@email.com" autocomplete="email"
+              class="w-full px-3.5 sm:px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-accent transition-all" style="--tw-ring-color:rgba(var(--c-accent-rgb),.3)">
+          </div>
+
+          <div class="mb-3 sm:mb-4">
+            <label class="block text-xs sm:text-sm font-medium text-gray-600 mb-1.5" for="lead-message">Describe the Job</label>
+            <textarea id="lead-message" name="message" placeholder="Briefly describe what you need help with..." rows="3"
+              class="w-full px-3.5 sm:px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-accent transition-all resize-y" style="--tw-ring-color:rgba(var(--c-accent-rgb),.3)"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-5 sm:mb-6">
+            <div>
+              <label class="block text-xs sm:text-sm font-medium text-gray-600 mb-1.5" for="lead-service">Service Type</label>
+              <select id="lead-service" name="service"
+                class="w-full px-3.5 sm:px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-accent transition-all bg-white" style="--tw-ring-color:rgba(var(--c-accent-rgb),.3)">
+                <option value="">Select a service&hellip;</option>
+                {{form_services}}
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs sm:text-sm font-medium text-gray-600 mb-1.5" for="lead-property">Property Type</label>
+              <select id="lead-property" name="property"
+                class="w-full px-3.5 sm:px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-accent transition-all bg-white" style="--tw-ring-color:rgba(var(--c-accent-rgb),.3)">
+                <option value="">Select type&hellip;</option>
+                <option>Residential</option>
+                <option>Commercial</option>
+                <option>Industrial</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-accent text-white font-semibold py-3.5 rounded-full hover:brightness-110 transition-all shadow-md text-sm sm:text-base" style="box-shadow:0 8px 24px rgba(var(--c-accent-rgb),.25)">
+            Send My Request &rarr;
+          </button>
+          <p class="text-center text-xs text-gray-400 mt-3">No spam. Your data is safe with us.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FAQ
+     ════════════════════════════════════════════════════════════════ -->
+<section id="faq" class="py-16 sm:py-24 lg:py-32 bg-bg">
+  <div class="max-w-2xl xl:max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="reveal text-center mb-10 sm:mb-14">
+      <span class="inline-block text-accent text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3">FAQ</span>
+      <h2 class="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Common Questions</h2>
+    </div>
+
+    <div class="space-y-2.5 sm:space-y-3">
+      {{tw_faqs}}
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TESTIMONIALS
+     ════════════════════════════════════════════════════════════════ -->
+<section id="reviews" class="py-16 sm:py-24 lg:py-32 bg-surface relative overflow-hidden">
+  <div class="mesh-blob w-72 h-72 sm:w-96 sm:h-96 bg-accent top-0 right-0"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+    <div class="reveal mb-10 sm:mb-14">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <span class="inline-block text-accent text-xs sm:text-sm font-semibold tracking-widest uppercase mb-2 sm:mb-3">Testimonials</span>
+          <h2 class="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight">What Our Clients Say</h2>
+        </div>
+        <p class="text-gray-400 text-xs sm:text-sm max-w-xs leading-relaxed sm:text-right hidden sm:block">{{trustHeadline}}</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {{tw_reviews}}
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     GALLERY (conditional)
+     ════════════════════════════════════════════════════════════════ -->
+{{tw_gallery_section}}
+
+<!-- ════════════════════════════════════════════════════════════════
+     PRICING (conditional)
+     ════════════════════════════════════════════════════════════════ -->
+{{tw_pricing_section}}
+
+<!-- ════════════════════════════════════════════════════════════════
+     CONTACT
+     ════════════════════════════════════════════════════════════════ -->
+<section id="contact" class="py-16 sm:py-24 lg:py-32 bg-bg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="reveal text-center mb-10 sm:mb-14">
+      <span class="inline-block text-accent text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3">Get in Touch</span>
+      <h2 class="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Contact {{business_name}}</h2>
+      <p class="text-gray-500 mt-3 sm:mt-4 text-sm sm:text-base max-w-lg mx-auto">We're ready to help with all your {{niche_lower}} needs in {{city}}.</p>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+      <!-- Phone -->
+      <a href="tel:{{phone_tel}}" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:0">
+        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Call Us</span>
+        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">{{phone}}</strong>
+      </a>
+
+      <!-- Email -->
+      <a href="mailto:{{email}}" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:1">
+        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        </div>
+        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Email Us</span>
+        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">{{email}}</strong>
+      </a>
+
+      <!-- Area -->
+      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:2">
+        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Area</span>
+        <strong class="block text-xs sm:text-sm font-semibold mt-1">{{address}}</strong>
+      </div>
+
+      <!-- Hours -->
+      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:3">
+        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Hours</span>
+        <strong class="block text-xs sm:text-sm font-semibold mt-1">{{opening_hours}}</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════════ -->
+<footer class="relative bg-primary text-white overflow-hidden">
+  <div class="absolute inset-0 opacity-10">
+    <img src="{{footer_bg_url}}" alt="" class="w-full h-full object-cover" loading="lazy">
+  </div>
+
+  <div class="relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
+
+        <!-- Brand + Newsletter -->
+        <div class="sm:col-span-2 lg:col-span-5">
+          <img src="{{logo_path}}" alt="{{business_name}}" class="h-7 sm:h-8 w-auto mb-5 sm:mb-6 brightness-0 invert" loading="lazy">
+          <p class="text-white/55 leading-relaxed mb-5 sm:mb-6 text-sm max-w-sm">
+            Get tips, updates and offers from {{business_name}} delivered to your inbox.
+          </p>
+          <form class="flex gap-2" id="footer-signup">
+            <input type="email" name="signup-email" placeholder="Your email address" autocomplete="email" required
+              class="flex-1 min-w-0 px-4 py-2.5 rounded-full bg-white/10 border border-white/10 text-white placeholder-white/35 text-sm focus:outline-none focus:ring-2 focus:ring-accent/40">
+            <button type="submit" class="bg-accent text-white font-semibold px-4 sm:px-5 py-2.5 rounded-full text-sm hover:brightness-110 transition-all shrink-0">
+              Join
+            </button>
+          </form>
+        </div>
+
+        <!-- Link columns -->
+        <div class="lg:col-span-4 grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-white/70">About</h4>
+            <div class="flex flex-col gap-2.5">
+              <a href="#about" class="text-white/45 text-sm hover:text-white transition-colors">Who We Are</a>
+              <a href="#reviews" class="text-white/45 text-sm hover:text-white transition-colors">Testimonials</a>
+              <a href="#faq" class="text-white/45 text-sm hover:text-white transition-colors">FAQ</a>
+              <a href="#lead" class="text-white/45 text-sm hover:text-white transition-colors">Get a Quote</a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-white/70">Services</h4>
+            <div class="flex flex-col gap-2.5">
+              <a href="#services" class="text-white/45 text-sm hover:text-white transition-colors">All Services</a>
+              {{tw_standards_footer}}
+              {{tw_pricing_footer}}
+              <a href="#contact" class="text-white/45 text-sm hover:text-white transition-colors">Contact Us</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="lg:col-span-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-white/70">Contact</h4>
+          <div class="flex flex-col gap-3">
+            <a href="tel:{{phone_tel}}" class="text-white/45 text-sm hover:text-white transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
+              {{phone}}
+            </a>
+            <a href="mailto:{{email}}" class="text-white/45 text-sm hover:text-white transition-colors flex items-center gap-2 break-all">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+              {{email}}
+            </a>
+            <span class="text-white/45 text-sm flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              {{address}}
+            </span>
+          </div>
+          <div class="flex items-center gap-2.5 mt-5">{{tw_social_icons}}</div>
+          <p class="text-white/25 text-xs mt-5 leading-relaxed">{{niche}} specialists proudly serving {{city}} and surrounding areas.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-center">
+        <small class="text-white/35 text-xs">&copy; {{year}} {{business_name}}. All rights reserved.</small>
+        <small class="text-white/35 text-xs">{{domain}} &middot; <a href="#privacy" class="hover:text-white transition-colors">Privacy Policy</a></small>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════════
+     PRIVACY
+     ════════════════════════════════════════════════════════════════ -->
+<section id="privacy" class="bg-gray-50 py-10 sm:py-12">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <details class="group">
+      <summary class="cursor-pointer flex items-center justify-between py-3 font-display font-semibold text-base sm:text-lg">
+        Privacy Policy &amp; Data Notice &mdash; {{business_name}}
+        <svg class="w-5 h-5 text-gray-400 shrink-0 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="grid gap-5 sm:gap-6 pb-6 text-sm text-gray-500 leading-relaxed pt-2">
+        <div><h4 class="font-semibold text-gray-700 mb-1">What we collect</h4><p>When you use our enquiry form, we collect your name, phone number, email address and a description of the job.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Why we collect it</h4><p>Your data is used solely to respond to your service request or to send relevant updates from {{business_name}}.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Who we share it with</h4><p>Nobody. Your personal data is never sold, rented or shared with any third party.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">How long we keep it</h4><p>Enquiry data is retained for up to 12 months and then securely deleted.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Your rights (UK GDPR)</h4><p>You have the right to access, correct or erase your personal data. Email <a href="mailto:{{email}}" class="underline" style="color:var(--c-accent)">{{email}}</a>.</p></div>
+        <div><h4 class="font-semibold text-gray-700 mb-1">Cookies &amp; tracking</h4><p>This website uses no tracking cookies and no third-party analytics.</p></div>
+        <p class="text-xs text-gray-400 pt-1">Last updated {{year}} &middot; {{business_name}}, {{city}}.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     FLOATING UI
+     ════════════════════════════════════════════════════════════════ -->
+<a href="#hero" id="backToTop" class="float-btn fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 w-10 h-10 sm:w-11 sm:h-11 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-accent transition-colors" aria-label="Back to top">
+  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"/></svg>
+</a>
+<a href="{{hero_cta_url}}" id="floatCta" class="float-btn fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 bg-accent text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-full shadow-xl hover:brightness-110 transition-all" style="box-shadow:0 8px 28px rgba(var(--c-accent-rgb),.35)">
+  {{hero_cta_text}}
+</a>
+
+<!-- ════════════════════════════════════════════════════════════════
+     INLINE JS
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Mobile nav ─────────────────────────────────── */
+  var burger   = document.getElementById('burgerBtn');
+  var drawer   = document.getElementById('navDrawer');
+  var backdrop = document.getElementById('navBackdrop');
+  var closeBtn = document.getElementById('closeDrawer');
+
+  function openNav() {
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    burger.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('nav-open');
+  }
+  function closeNav() {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-open');
+  }
+
+  if (burger)   burger.addEventListener('click', function() { drawer.classList.contains('open') ? closeNav() : openNav(); });
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+  if (closeBtn) closeBtn.addEventListener('click', closeNav);
+
+  /* Close drawer when any drawer link is clicked */
+  document.querySelectorAll('#navDrawer a').forEach(function(a) {
+    a.addEventListener('click', closeNav);
+  });
+
+  /* Close on Escape */
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+
+  /* ── Scroll: progress + nav style + float btns ── */
+  var prog = document.getElementById('scrollProgress');
+  var nav  = document.getElementById('navbar');
+  var btt  = document.getElementById('backToTop');
+  var fcta = document.getElementById('floatCta');
+
+  function onScroll() {
+    var s = window.scrollY;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (prog) prog.style.width = (h > 0 ? (s / h) * 100 : 0) + '%';
+    if (nav)  nav.classList.toggle('scrolled', s > 50);
+    if (btt)  btt.classList.toggle('visible',  s > 500);
+    if (fcta) fcta.classList.toggle('visible', s > 900);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ── Reveal on scroll ───────────────────────────── */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function(el) { ro.observe(el); });
+  } else {
+    reveals.forEach(function(el) { el.classList.add('visible'); });
+  }
+
+  /* ── Stat counter ───────────────────────────────── */
+  function animateStat(el) {
+    var raw = el.getAttribute('data-target') || el.textContent || '';
+    var num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+    var suffix = raw.replace(/^[\d,.]+/, '').trim();
+    if (isNaN(num) || num === 0) return;
+    var start = performance.now();
+    var ease = function(t) { return 1 - Math.pow(1 - t, 3); };
+    (function tick(now) {
+      var p = Math.min((now - start) / 1600, 1);
+      el.textContent = Math.round(ease(p) * num).toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+  var statEls = Array.prototype.slice.call(document.querySelectorAll('[data-target]'));
+  if ('IntersectionObserver' in window && statEls.length) {
+    var so = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { animateStat(e.target); so.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    statEls.forEach(function(el) { so.observe(el); });
+  }
+
+  /* ── Active nav link highlight ──────────────────── */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-link[href^="#"]'));
+  if ('IntersectionObserver' in window && navLinks.length) {
+    var secEls = navLinks.map(function(l) { return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+    var aio = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          navLinks.forEach(function(l) {
+            var active = l.getAttribute('href') === '#' + e.target.id;
+            l.style.color = active ? 'var(--c-accent)' : '';
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+    secEls.forEach(function(s) { aio.observe(s); });
+  }
+
+  /* ── Footer signup ──────────────────────────────── */
+  var fs = document.getElementById('footer-signup');
+  if (fs) fs.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var em = (fs.querySelector('[name="signup-email"]') || {}).value || '';
+    if (!em) return;
+    window.location.href = 'mailto:{{email}}?subject=Newsletter+Signup&body=Please+add+me+to+your+mailing+list.%0A%0AEmail:+' + encodeURIComponent(em);
+    fs.innerHTML = '<p style="color:rgba(255,255,255,.65);font-size:13px;padding:8px 0">Thanks! We\'ll be in touch.</p>';
+  });
+
+  /* ── Lead form ──────────────────────────────────── */
+  var lf = document.getElementById('lead-form');
+  if (lf) lf.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var get = function(n) { var el = lf.querySelector('[name="' + n + '"]'); return el ? el.value.trim() : ''; };
+    var name = get('name'), phone = get('phone'), email = get('email'),
+        service = get('service'), property = get('property'), message = get('message');
+    if (!name && !phone) { var fi = lf.querySelector('[required]'); if (fi) fi.focus(); return; }
+    var subject = encodeURIComponent((service || 'General Enquiry') + ' \u2014 Quote Request');
+    var body = encodeURIComponent(
+      'Name: ' + (name || '\u2014') + '\nPhone: ' + (phone || '\u2014') + '\nEmail: ' + (email || '\u2014') +
+      '\nService: ' + (service || 'Not specified') + '\nProperty: ' + (property || 'Not specified') +
+      (message ? '\n\nJob Description:\n' + message : '')
+    );
+    window.location.href = 'mailto:{{email}}?subject=' + subject + '&body=' + body;
+    lf.innerHTML =
+      '<div style="text-align:center;padding:48px 24px">' +
+        '<div style="font-size:52px;margin-bottom:12px;color:var(--c-accent)">&#10003;</div>' +
+        '<h3 style="font-size:20px;font-weight:700;margin-bottom:8px;font-family:Space Grotesk,Inter,sans-serif">Thanks' + (name ? ', ' + name.split(' ')[0] : '') + '!</h3>' +
+        '<p style="color:#9ca3af;font-size:13px;margin-bottom:24px;line-height:1.6">Your request has been sent.<br>We\u2019ll be in touch within 1 business day.</p>' +
+        '<a href="tel:{{phone_tel}}" style="display:inline-flex;align-items:center;gap:8px;background:var(--c-accent);color:#fff;font-weight:600;padding:12px 24px;border-radius:9999px;font-size:14px;text-decoration:none">&#9742; Call Us Now</a>' +
+      '</div>';
+  });
+
+})();
+</script>
+</body>
+</html>

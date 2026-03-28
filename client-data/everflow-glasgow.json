@@ -1,0 +1,55 @@
+{
+  "id": "everflow-glasgow",
+  "business_name": "Everflow Plumbing",
+  "niche": "Emergency Plumbing",
+  "city": "Glasgow",
+  "domain": "everflowplumbing.co.uk",
+  "logo_path": "assets/logo.svg",
+  "phone": "+44 141 555 9803",
+  "email": "service@everflowplumbing.co.uk",
+  "headline": "Glasgow’s on-demand emergency plumbers in 45 minutes or less",
+  "subheadline": "Fleet-ready storm service and guaranteed home security checks after every job.",
+  "about_text": "Everflow Plumbing supports Glasgow households with smart leak sensors and rapid access code service.",
+  "services": [
+    { "title": "Storm Damage Plumbing", "description": "24/7 storm-team deployments for flooded roadsides and building leaks." },
+    { "title": "Advanced Diagnostics", "description": "Thermal scan, pressure and camera inspections for hidden pipework issues." },
+    { "title": "Priority Landlord Support", "description": "Guaranteed work windows and compliance documentation for rental portfolios." }
+  ],
+  "reviews": [
+    { "name": "Fiona G.", "quote": "Rated 5 stars for speed and clean professional finish.", "role": "Tenant" },
+    { "name": "Liam S.", "quote": "Great communication and no nonsense quote for urgent repairs.", "role": "Landlord" }
+  ],
+  "faqs": [
+    { "question": "Can I pay via card on site?", "answer": "Yes, we accept all cards and contactless payments plus bank transfer." },
+    { "question": "Do you service heritage properties?", "answer": "We have specialist teams for older Glasgow buildings and council flats." }
+  ],
+  "service_area_text": "Glasgow CBD, West End, Southside, East End, and surrounding valleys.",
+  "differentiators": [
+    "On-demand queue for urgent jobs",
+    "After-service follow-up call within 24 hours",
+    "Verified zero-rework policy"
+  ],
+  "trust_proof": [
+    "Glasgow business registry recommended",
+    "Emergency response program since 2018",
+    "Real-time service updates via SMS"
+  ],
+  "cta_text": "Call for emergency repair",
+  "cta_url": "tel:+441415559803",
+  "theme_colors": {
+    "primary": "#16496b",
+    "secondary": "#1f78b4",
+    "accent": "#ffb703",
+    "background": "#fbfcfe",
+    "text": "#122232",
+    "surface": "#ffffff"
+  },
+  "metadata": {
+    "title": "Everflow Plumbing | Glasgow Emergency Plumbers",
+    "description": "Everflow offers Glasgow emergency plumbing with proof-driven reliability and rapid dispatch.",
+    "locale": "en-GB",
+    "currency": "GBP",
+    "opening_hours": "Mo-Su 00:00-23:59",
+    "address": "Glasgow city center" 
+  }
+}

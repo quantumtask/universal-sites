@@ -1,0 +1,62 @@
+{
+  "id": "gloss-grace-london",
+  "business_name": "Gloss & Grace",
+  "niche": "Hair & Beauty Salons",
+  "city": "London",
+  "domain": "glossandgrace.co.uk",
+  "logo_path": "assets/logo.svg",
+  "phone": "+44 20 7555 8800",
+  "email": "hello@glossandgrace.co.uk",
+  "headline": "London's premier hair and beauty salon — expert colourists, skin specialists and nail artists, seven days a week.",
+  "subheadline": "London's most trusted hair and beauty destination.",
+  "about_text": "Gloss & Grace delivers luxury hair colouring, precision cuts, advanced skincare treatments and nail services across our central London studios. Our award-winning stylists and beauty therapists are available seven days a week — no compromise on quality.",
+  "services": [
+    { "title": "Hair Colour & Highlights", "description": "Balayage, full-colour, toning and creative colour techniques by our master colourists — bespoke results for every client." },
+    { "title": "Cuts, Blow-Dries & Styling", "description": "Precision cuts and expert styling for all hair types — from everyday blow-dries to bridal and occasion up-dos." },
+    { "title": "Skin, Nails & Beauty Treatments", "description": "HydraFacials, gel manicures, lash extensions and a full menu of skin and beauty treatments in our London studios." }
+  ],
+  "reviews": [
+    { "name": "Sophie W.", "quote": "The best balayage I've ever had — the colour is natural, dimensional and exactly what I asked for.", "body": "I've tried four salons for balayage and never been truly happy until Gloss & Grace. The colourist listened carefully, explained the process and the result is everything I wanted. Will not go anywhere else now.", "role": "Client, Islington" },
+    { "name": "Marcus T.", "quote": "Immaculate finish, professional team and the most relaxing salon experience I've had in London.", "body": "From the moment I walked in the whole experience was calm, professional and focused entirely on what I wanted. The cut is perfect and the styling advice I received was genuinely useful. A cut above every other salon I've tried in the city.", "role": "Client, Shoreditch" },
+    { "name": "Naomi K.", "quote": "Booked a HydraFacial and gel nails — my skin glowed for weeks afterwards. Absolutely wonderful.", "body": "Treated myself to a full beauty session at Gloss & Grace and every treatment was exceptional. The therapist tailored the HydraFacial to my skin type and the gel nails lasted a full three weeks. A genuinely luxurious experience at a fair price.", "role": "Client, Chelsea" }
+  ],
+  "faqs": [
+    { "question": "Do you offer colour consultations before booking?", "answer": "Yes — we offer a complimentary 15-minute colour consultation so we can plan the perfect result before your appointment." },
+    { "question": "How do I book an appointment at Gloss & Grace in London?", "answer": "Call us or book online — we have availability seven days a week including evenings at our London studios." },
+    { "question": "Do you offer a satisfaction guarantee on your services?", "answer": "Absolutely — if you're not happy with your result, contact us within 7 days and we'll invite you back for a complimentary adjustment." }
+  ],
+  "differentiators": [
+    "All stylists and therapists are fully qualified, accredited and undergo regular advanced training.",
+    "We offer appointments seven days a week including evenings — flexible booking to fit your schedule.",
+    "Every colour service includes a complimentary skin test and in-depth consultation before we begin.",
+    "You receive a transparent price list before booking. No hidden charges, no surprise additions.",
+    "We offer a 7-day satisfaction guarantee — if you're not delighted, we'll invite you back for a complimentary adjustment.",
+    "Premium product lines only — we use professional-grade colours, skincare and treatment brands throughout."
+  ],
+  "jobs_count": "2,000+",
+  "jobs_text": "Happy clients served across London",
+  "service_area_text": "Central London, North London, East London, South London, West London and surrounding Greater London areas.",
+  "cta_text": "Book Your Appointment",
+  "cta_url": "tel:+442075558800",
+  "images": {
+    "banner": "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=1920&q=85&auto=format",
+    "service1": "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=480&q=85&auto=format",
+    "service2": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=480&q=85&auto=format",
+    "service3": "https://images.unsplash.com/photo-1606166187734-a4cb74079037?w=480&q=85&auto=format"
+  },
+  "theme_colors": {
+    "primary": "#6b2d5e",
+    "secondary": "#c06c99",
+    "accent": "#f7c5e0",
+    "background": "#fdf8fb",
+    "text": "#1a0a14",
+    "surface": "#ffffff"
+  },
+  "metadata": {
+    "title": "Gloss & Grace | Hair & Beauty Salons London",
+    "description": "Gloss & Grace offers premium hair colour, cuts, skincare and nail services across London. Award-winning stylists, 7-day appointments, satisfaction guaranteed.",
+    "locale": "en-GB",
+    "opening_hours": "Mo-Su 09:00-20:00",
+    "address": "Central London, Greater London"
+  }
+}
