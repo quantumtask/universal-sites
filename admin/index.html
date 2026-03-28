@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Site Editor</title>
+<title>QuantumTask — Site Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -148,6 +148,41 @@ code{font-size:12px;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-fa
 .btn-upload:hover{background:var(--border);color:var(--text)}
 .upload-hint{font-size:11px;color:#94a3b8;margin-top:3px}
 
+/* ── Brand logo in sidebar ──────────────────────── */
+.sb-brand{display:flex;align-items:center;gap:11px}
+.sb-brand-logo-wrap{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;border:1px solid rgba(255,255,255,.1);box-shadow:0 0 12px rgba(99,102,241,.25)}
+.sb-brand-logo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.sb-brand-name{font-size:13.5px;font-weight:700;color:#e2e8f0;font-family:var(--font-display);letter-spacing:-.02em}
+.sb-brand-sub{font-size:10px;color:#475569;margin-top:1px;letter-spacing:.04em;text-transform:uppercase}
+
+/* ── Dot-grid on main area ──────────────────────── */
+main{background-image:radial-gradient(circle,rgba(148,163,184,.22) 1px,transparent 1px);background-size:28px 28px}
+
+/* ── Sidebar top glow ───────────────────────────── */
+.sb-top{position:relative;overflow:hidden}
+.sb-top::before{content:'';position:absolute;top:-30px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(99,102,241,.22),transparent 70%);pointer-events:none;border-radius:50%}
+
+/* ── Active sidebar item glow ───────────────────── */
+.site-item.active{box-shadow:inset 2px 0 10px rgba(99,102,241,.18)}
+
+/* ── Tab hover pill ─────────────────────────────── */
+.tab-btn{border-radius:6px 6px 0 0}
+.tab-btn:hover{background:rgba(99,102,241,.05)}
+.tab-btn.active{background:rgba(99,102,241,.07)}
+
+/* ── Card title accent ──────────────────────────── */
+.card-title{border-bottom:none;margin-bottom:0;padding-bottom:0;position:relative;display:flex;align-items:center;gap:8px;margin-bottom:18px;padding-bottom:14px}
+.card-title::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,rgba(99,102,241,.3),transparent)}
+.card-title::before{content:'';width:3px;height:14px;border-radius:2px;background:var(--accent);flex-shrink:0}
+
+/* ── Generate button pulse ──────────────────────── */
+@keyframes genpulse{0%,100%{box-shadow:0 2px 10px rgba(99,102,241,.35)}50%{box-shadow:0 2px 22px rgba(99,102,241,.65)}}
+.btn-gen:not(:disabled){animation:genpulse 2.8s ease-in-out infinite}
+
+/* ── New site button gradient ───────────────────── */
+.btn-new{background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(129,140,248,.08));border-color:rgba(99,102,241,.25)!important}
+.btn-new:hover{background:linear-gradient(135deg,rgba(99,102,241,.28),rgba(129,140,248,.15));color:#c7d2fe}
+
 /* ── Niche picker ───────────────────────────────── */
 .niche-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:4px}
 .niche-card{border-radius:10px;padding:14px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;border:2px solid transparent;transition:.2s;position:relative;min-height:88px;justify-content:center;user-select:none}
@@ -166,9 +201,14 @@ code{font-size:12px;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-fa
   <!-- Sidebar -->
   <aside>
     <div class="sb-top">
-      <div class="sb-logo">
-        <div class="sb-logo-icon">⚡</div>
-        <span>Site Editor</span>
+      <div class="sb-brand">
+        <div class="sb-brand-logo-wrap">
+          <img src="/logo.png" alt="QuantumTask">
+        </div>
+        <div>
+          <div class="sb-brand-name">QuantumTask</div>
+          <div class="sb-brand-sub">Site Editor</div>
+        </div>
       </div>
       <button class="btn btn-new" onclick="showModal()">+ New Site</button>
     </div>
