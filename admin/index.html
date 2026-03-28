@@ -173,6 +173,7 @@ code{font-size:12px;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-fa
         <div class="ed-actions">
           <button class="btn btn-save" onclick="save()">💾 Save</button>
           <button class="btn btn-gen" id="genBtn" onclick="generate()">⚡ Generate Site</button>
+          <button class="btn btn-ghost" id="dlBtn" onclick="downloadSite()" title="Download generated HTML">⬇ Download</button>
         </div>
       </div>
       <div class="tab-bar" id="tabBar"></div>
@@ -995,8 +996,9 @@ async function generate() {
     const r = await fetch(`/api/generate/${currentId}`, {method:'POST'});
     const j = await r.json();
     if (r.ok) {
-      toast('Site generated ✓ — find it in generated-sites/');
+      toast('Site generated ✓ — downloading now…');
       btn.textContent = '✓ Done';
+      triggerDownload(currentId);
       setTimeout(()=>{ btn.disabled=false; btn.textContent='⚡ Generate Site'; }, 3000);
     } else {
       toast('Generation failed: ' + j.error, 'err');
@@ -1006,6 +1008,25 @@ async function generate() {
     toast('Network error','err');
     btn.disabled=false; btn.textContent='⚡ Generate Site';
   }
+}
+
+function triggerDownload(id) {
+  const a = document.createElement('a');
+  a.href = `/api/download/${id}`;
+  a.download = `${id}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+async function downloadSite() {
+  if (!currentId) return;
+  const r = await fetch(`/api/download/${currentId}`);
+  if (r.status === 404) {
+    toast('Generate the site first, then download.', 'err');
+    return;
+  }
+  triggerDownload(currentId);
 }
 
 /* ── New site modal ────────────────────────────────── */

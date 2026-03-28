@@ -83,6 +83,17 @@ app.post('/api/generate/:id', (req, res) => {
   }
 });
 
+/* ── Download a generated site as HTML file ─────────────── */
+app.get('/api/download/:id', (req, res) => {
+  const file = path.join(ROOT, 'generated-sites', req.params.id, 'index.html');
+  if (!fs.existsSync(file)) {
+    return res.status(404).json({ error: 'Site not generated yet — click Generate Site first.' });
+  }
+  res.setHeader('Content-Disposition', `attachment; filename="${req.params.id}.html"`);
+  res.setHeader('Content-Type', 'text/html');
+  res.sendFile(file);
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log('\n  ┌────────────────────────────────────┐');
   console.log(`  │  Site Editor  →  http://localhost:${PORT}  │`);
