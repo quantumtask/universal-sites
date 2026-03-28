@@ -256,13 +256,16 @@ export function renderTwFaqs(faqs: ClientSiteConfig['faqs']): string {
   if (!Array.isArray(faqs) || faqs.length === 0) return '<p class="text-gray-400">No FAQs yet.</p>';
 
   return faqs.map((faq, i) =>
-    `<div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:${i}">
+    `<div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:${i}">
       <input type="checkbox" id="faq-${i}" class="faq-toggle hidden">
-      <label for="faq-${i}" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">${escapeHtml(faq.question)}</span>
+      <label for="faq-${i}" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">${i + 1}</span>
+          <span class="font-semibold text-sm sm:text-base">${escapeHtml(faq.question)}</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">${escapeHtml(faq.answer)}</div>
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">${escapeHtml(faq.answer)}</div>
     </div>`
   ).join('');
 }
@@ -273,17 +276,18 @@ export function renderTwPricingSection(pricing: PricingTier[] | undefined, ctaUr
 
   const tiers = pricing.map((tier, i) => {
     const hl = tier.highlight;
-    return `<div class="reveal ${hl ? 'pricing-highlight relative' : ''} bg-surface rounded-2xl p-8 border ${hl ? 'border-accent' : 'border-gray-100'} flex flex-col" style="--i:${i}">
-      ${hl ? '<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>' : ''}
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">${escapeHtml(tier.tier)}</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        ${tier.unit ? `<span class="text-sm text-gray-400">${escapeHtml(tier.unit)}</span>` : ''}
-        <span class="font-display text-4xl font-bold">${escapeHtml(tier.price)}</span>
+    return `<div class="reveal ${hl ? 'pricing-highlight relative overflow-hidden' : 'relative'} bg-surface rounded-2xl p-8 border ${hl ? 'border-accent/60' : 'border-gray-100'} flex flex-col" style="--i:${i}">
+      ${hl ? `<div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-accent to-accent/60 rounded-t-2xl"></div>
+      <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-accent/30 whitespace-nowrap">Most Popular</div>` : ''}
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ${hl ? 'mt-2' : ''}">${escapeHtml(tier.tier)}</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        ${tier.unit ? `<span class="text-base text-gray-400 font-medium">${escapeHtml(tier.unit)}</span>` : ''}
+        <span class="font-display text-5xl font-bold tracking-tight">${escapeHtml(tier.price)}</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        ${tier.features.map(f => `<li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>${escapeHtml(f)}</li>`).join('')}
+      <ul class="space-y-3.5 mb-8 flex-1">
+        ${tier.features.map(f => `<li class="flex items-start gap-3 text-sm text-gray-600"><svg class="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>${escapeHtml(f)}</li>`).join('')}
       </ul>
-      <a href="${escapeHtml(ctaUrl)}" class="${hl ? 'bg-accent text-white shadow-lg shadow-accent/25' : 'bg-primary/5 text-primary hover:bg-primary/10'} font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="${escapeHtml(ctaUrl)}" class="${hl ? 'bg-accent text-white shadow-lg shadow-accent/25 hover:brightness-110' : 'bg-gray-900 text-white hover:bg-gray-800'} font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         ${escapeHtml(tier.cta ?? 'Get Started')}
       </a>
     </div>`;

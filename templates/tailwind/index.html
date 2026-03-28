@@ -146,7 +146,9 @@ body.nav-open { overflow: hidden; }
 
 /* ── Hero ──────────────────────────────────────── */
 .hero-overlay {
-  background: linear-gradient(160deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.2) 100%);
+  background:
+    linear-gradient(165deg, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.52) 48%, rgba(0,0,0,0.16) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 44%);
 }
 
 /* ── Mesh blob ─────────────────────────────────── */
@@ -169,9 +171,18 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ── Testimonial ───────────────────────────────── */
-.testi-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.testi-card { position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.testi-card::before {
+  content: '\201C';
+  position: absolute; top: -14px; right: 18px;
+  font-family: Georgia, serif; font-size: 128px; line-height: 1;
+  color: var(--c-accent); opacity: 0.07;
+  pointer-events: none; user-select: none;
+  transition: opacity 0.35s ease;
+}
 @media (hover: hover) {
-  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+  .testi-card:hover { transform: translateY(-5px); box-shadow: 0 22px 60px rgba(0,0,0,0.09); border-color: rgba(var(--c-accent-rgb), 0.22) !important; }
+  .testi-card:hover::before { opacity: 0.14; }
 }
 
 /* ── FAQ accordion ─────────────────────────────── */
@@ -207,6 +218,59 @@ body.nav-open { overflow: hidden; }
 /* ── Touch targets (min 44px) ──────────────────── */
 a, button, label[for] { min-height: 44px; }
 nav a, nav button { min-height: unset; }
+
+/* ── Global selection colour ───────────────────── */
+::selection { background: rgba(var(--c-accent-rgb),.22); color: inherit; }
+
+/* ── Trust strip fade edges (solid overlay technique) */
+#trust { position: relative; }
+#trust::before, #trust::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 72px; z-index: 2; pointer-events: none;
+}
+#trust::before { left:  0; background: linear-gradient(to right, var(--c-primary), transparent); }
+#trust::after  { right: 0; background: linear-gradient(to left,  var(--c-primary), transparent); }
+
+/* ── Service card shimmer sweep ────────────────── */
+.service-card { position: relative; overflow: hidden; }
+.service-card::after {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.075) 50%, transparent 80%);
+  transition: left 0.75s cubic-bezier(.25,.46,.45,.94);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .service-card:hover::after { left: 160%; }
+}
+
+/* ── Nav link underline indicator ──────────────── */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 2px; border-radius: 2px; background: var(--c-accent);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 0.22s cubic-bezier(.25,.46,.45,.94);
+}
+@media (hover: hover) {
+  .nav-link:hover::after { transform: scaleX(1); }
+}
+
+/* ── Contact card hover glow ───────────────────── */
+@media (hover: hover) {
+  .contact-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(var(--c-accent-rgb), 0.28) !important;
+    box-shadow: 0 18px 52px rgba(0,0,0,0.08), 0 0 0 1px rgba(var(--c-accent-rgb), 0.1) !important;
+  }
+}
+
+/* ── Hero stat numbers ─────────────────────────── */
+.hero-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
 </style>
 </head>
 <body class="antialiased">
@@ -614,7 +678,7 @@ nav a, nav button { min-height: unset; }
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
       <!-- Phone -->
-      <a href="tel:{{phone_tel}}" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:0">
+      <a href="tel:{{phone_tel}}" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:0">
         <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
         </div>
@@ -623,7 +687,7 @@ nav a, nav button { min-height: unset; }
       </a>
 
       <!-- Email -->
-      <a href="mailto:{{email}}" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:1">
+      <a href="mailto:{{email}}" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:1">
         <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
         </div>
@@ -632,7 +696,7 @@ nav a, nav button { min-height: unset; }
       </a>
 
       <!-- Area -->
-      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:2">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:2">
         <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         </div>
@@ -641,7 +705,7 @@ nav a, nav button { min-height: unset; }
       </div>
 
       <!-- Hours -->
-      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:3">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:3">
         <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
