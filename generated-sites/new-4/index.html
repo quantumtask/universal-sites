@@ -146,7 +146,9 @@ body.nav-open { overflow: hidden; }
 
 /* ── Hero ──────────────────────────────────────── */
 .hero-overlay {
-  background: linear-gradient(160deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.2) 100%);
+  background:
+    linear-gradient(165deg, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.52) 48%, rgba(0,0,0,0.16) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 44%);
 }
 
 /* ── Mesh blob ─────────────────────────────────── */
@@ -169,9 +171,18 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ── Testimonial ───────────────────────────────── */
-.testi-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.testi-card { position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.testi-card::before {
+  content: '\201C';
+  position: absolute; top: -14px; right: 18px;
+  font-family: Georgia, serif; font-size: 128px; line-height: 1;
+  color: var(--c-accent); opacity: 0.07;
+  pointer-events: none; user-select: none;
+  transition: opacity 0.35s ease;
+}
 @media (hover: hover) {
-  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+  .testi-card:hover { transform: translateY(-5px); box-shadow: 0 22px 60px rgba(0,0,0,0.09); border-color: rgba(var(--c-accent-rgb), 0.22) !important; }
+  .testi-card:hover::before { opacity: 0.14; }
 }
 
 /* ── FAQ accordion ─────────────────────────────── */
@@ -205,8 +216,92 @@ body.nav-open { overflow: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
 
 /* ── Touch targets (min 44px) ──────────────────── */
-a, button, label[for] { min-height: 44px; }
-nav a, nav button { min-height: unset; }
+/* Apply only to actual buttons, not inline/footer anchors */
+button { min-height: 44px; }
+.burger { min-height: unset; }
+.drawer-link { min-height: 44px; }
+
+/* ── Global selection colour ───────────────────── */
+::selection { background: rgba(var(--c-accent-rgb),.22); color: inherit; }
+
+/* ── Trust strip fade edges (solid overlay technique) */
+#trust { position: relative; }
+#trust::before, #trust::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 72px; z-index: 2; pointer-events: none;
+}
+#trust::before { left:  0; background: linear-gradient(to right, var(--c-primary), transparent); }
+#trust::after  { right: 0; background: linear-gradient(to left,  var(--c-primary), transparent); }
+
+/* ── Service card shimmer sweep ────────────────── */
+.service-card { position: relative; overflow: hidden; }
+.service-card::after {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.075) 50%, transparent 80%);
+  transition: left 0.75s cubic-bezier(.25,.46,.45,.94);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .service-card:hover::after { left: 160%; }
+}
+
+/* ── Nav link underline indicator ──────────────── */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 2px; border-radius: 2px; background: var(--c-accent);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 0.22s cubic-bezier(.25,.46,.45,.94);
+}
+@media (hover: hover) {
+  .nav-link:hover::after { transform: scaleX(1); }
+}
+
+/* ── Contact card hover glow ───────────────────── */
+@media (hover: hover) {
+  .contact-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(var(--c-accent-rgb), 0.28) !important;
+    box-shadow: 0 18px 52px rgba(0,0,0,0.08), 0 0 0 1px rgba(var(--c-accent-rgb), 0.1) !important;
+  }
+}
+
+/* ── Hero stat numbers ─────────────────────────── */
+.hero-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ── Mobile refinements ─────────────────────────── */
+/* Snappier, shorter reveal on small screens */
+@media (max-width: 639px) {
+  .reveal { transform: translateY(14px); }
+  .reveal[style*="--i:3"] { transition-delay: .12s; }
+  .reveal[style*="--i:4"] { transition-delay: .15s; }
+  .reveal[style*="--i:5"] { transition-delay: .18s; }
+  /* Tighter section spacing on mobile */
+  .sc-grid { gap: 10px; }
+}
+
+/* iOS safe-area padding for floating buttons */
+@media (max-width: 480px) {
+  #floatCta {
+    font-size: 0.78rem; padding: 10px 14px;
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+    left: 16px;
+  }
+  #backToTop {
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+    right: 16px; width: 40px; height: 40px;
+  }
+}
+
+/* Prevent horizontal overflow from mesh blobs on mobile */
+@media (max-width: 639px) {
+  .mesh-blob { opacity: 0.1; }
+}
 </style>
 </head>
 <body class="antialiased">
@@ -452,143 +547,270 @@ nav a, nav button { min-height: unset; }
 <!-- ════════════════════════════════════════════════════════════════
      STANDARDS (conditional)
      ════════════════════════════════════════════════════════════════ -->
-<section id="standards" class="relative py-24 lg:py-32 overflow-hidden" style="background:var(--c-primary)">
-  <!-- subtle dot-grid overlay -->
-  <div class="absolute inset-0 opacity-[0.03]" style="background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:28px 28px;"></div>
-  <!-- radial glow -->
-  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-    <div class="w-[700px] h-[500px] rounded-full blur-[120px] opacity-10" style="background:var(--c-accent)"></div>
+<section id="standards" class="relative py-16 sm:py-24 lg:py-32 overflow-hidden" style="background:var(--c-primary)">
+
+  <!-- dot-grid texture -->
+  <div class="absolute inset-0" style="background-image:radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px);background-size:28px 28px;" aria-hidden="true"></div>
+
+  <!-- centre glow -->
+  <div class="absolute inset-0 pointer-events-none flex items-center justify-center" aria-hidden="true">
+    <div style="width:660px;height:460px;border-radius:50%;filter:blur(110px);opacity:0.09;background:var(--c-accent);"></div>
   </div>
 
-  <div class="relative max-w-7xl mx-auto px-5 lg:px-8">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Header -->
-    <div class="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-14">
+    <!-- section header -->
+    <div class="reveal mb-10 sm:mb-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
       <div>
-        <div class="inline-flex items-center gap-2 mb-4">
-          <span class="w-5 h-px bg-[var(--c-accent)]"></span>
-          <span class="text-[var(--c-accent)] text-xs font-bold tracking-[0.2em] uppercase">Why Choose Us</span>
+        <div class="inline-flex items-center gap-2.5 mb-4">
+          <span style="display:inline-block;width:20px;height:1px;background:var(--c-accent);"></span>
+          <span style="color:var(--c-accent);font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;">Why Choose Us</span>
         </div>
-        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">Our Standards</h2>
+        <h2 class="font-display text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">Our Standards</h2>
       </div>
-      <p class="text-white/35 text-sm max-w-xs sm:text-right leading-relaxed hidden sm:block">Every promise we make is backed by our commitment to quality workmanship.</p>
+      <p class="text-white/30 text-sm max-w-xs leading-relaxed sm:text-right hidden sm:block">Every promise we make is backed by our commitment to quality workmanship.</p>
     </div>
 
-    <!-- Cards grid -->
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:0">
-      <!-- accent top line -->
-      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    <!-- cards -->
+    <div class="sc-grid"><div class="sc reveal group" style="--i:0">
+      <!-- top accent line: slides in from left on hover -->
+      <div class="sc-line"></div>
       <!-- watermark number -->
-      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">01</span>
-      <!-- icon badge -->
-      <div class="relative w-fit">
-        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-        </div>
-        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      <span class="sc-num" aria-hidden="true">01</span>
+      <!-- icon -->
+      <div class="sc-icon-wrap">
+        <div class="sc-icon"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <span class="sc-dot" aria-hidden="true"></span>
       </div>
-      <!-- text -->
-      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">All team members are fully insured, qualified and background-checked before every job.</p>
-      <!-- bottom arrow -->
-      <div class="mt-auto flex justify-end">
-        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <!-- body text -->
+      <p class="sc-text">All team members are fully insured, qualified and background-checked before every job.</p>
+      <!-- arrow -->
+      <div class="sc-arrow-wrap" aria-hidden="true">
+        <svg class="sc-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </div>
-    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:1">
-      <!-- accent top line -->
-      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div><div class="sc reveal group" style="--i:1">
+      <!-- top accent line: slides in from left on hover -->
+      <div class="sc-line"></div>
       <!-- watermark number -->
-      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">02</span>
-      <!-- icon badge -->
-      <div class="relative w-fit">
-        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      <span class="sc-num" aria-hidden="true">02</span>
+      <!-- icon -->
+      <div class="sc-icon-wrap">
+        <div class="sc-icon"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <span class="sc-dot" aria-hidden="true"></span>
       </div>
-      <!-- text -->
-      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">We guarantee a response within one hour for all confirmed emergency callouts.</p>
-      <!-- bottom arrow -->
-      <div class="mt-auto flex justify-end">
-        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <!-- body text -->
+      <p class="sc-text">We guarantee a response within one hour for all confirmed emergency callouts.</p>
+      <!-- arrow -->
+      <div class="sc-arrow-wrap" aria-hidden="true">
+        <svg class="sc-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </div>
-    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:2">
-      <!-- accent top line -->
-      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div><div class="sc reveal group" style="--i:2">
+      <!-- top accent line: slides in from left on hover -->
+      <div class="sc-line"></div>
       <!-- watermark number -->
-      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">03</span>
-      <!-- icon badge -->
-      <div class="relative w-fit">
-        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      <span class="sc-num" aria-hidden="true">03</span>
+      <!-- icon -->
+      <div class="sc-icon-wrap">
+        <div class="sc-icon"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <span class="sc-dot" aria-hidden="true"></span>
       </div>
-      <!-- text -->
-      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">Every job includes a free inspection of related areas — at no extra cost to you.</p>
-      <!-- bottom arrow -->
-      <div class="mt-auto flex justify-end">
-        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <!-- body text -->
+      <p class="sc-text">Every job includes a free inspection of related areas — at no extra cost to you.</p>
+      <!-- arrow -->
+      <div class="sc-arrow-wrap" aria-hidden="true">
+        <svg class="sc-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </div>
-    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:3">
-      <!-- accent top line -->
-      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div><div class="sc reveal group" style="--i:3">
+      <!-- top accent line: slides in from left on hover -->
+      <div class="sc-line"></div>
       <!-- watermark number -->
-      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">04</span>
-      <!-- icon badge -->
-      <div class="relative w-fit">
-        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-        </div>
-        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      <span class="sc-num" aria-hidden="true">04</span>
+      <!-- icon -->
+      <div class="sc-icon-wrap">
+        <div class="sc-icon"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+        <span class="sc-dot" aria-hidden="true"></span>
       </div>
-      <!-- text -->
-      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">We provide a written quote before starting. The price we quote is the price you pay.</p>
-      <!-- bottom arrow -->
-      <div class="mt-auto flex justify-end">
-        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <!-- body text -->
+      <p class="sc-text">We provide a written quote before starting. The price we quote is the price you pay.</p>
+      <!-- arrow -->
+      <div class="sc-arrow-wrap" aria-hidden="true">
+        <svg class="sc-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </div>
-    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:4">
-      <!-- accent top line -->
-      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div><div class="sc reveal group" style="--i:4">
+      <!-- top accent line: slides in from left on hover -->
+      <div class="sc-line"></div>
       <!-- watermark number -->
-      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">05</span>
-      <!-- icon badge -->
-      <div class="relative w-fit">
-        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      <span class="sc-num" aria-hidden="true">05</span>
+      <!-- icon -->
+      <div class="sc-icon-wrap">
+        <div class="sc-icon"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <span class="sc-dot" aria-hidden="true"></span>
       </div>
-      <!-- text -->
-      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">All work carries a minimum 12-month workmanship guarantee — in writing, every time.</p>
-      <!-- bottom arrow -->
-      <div class="mt-auto flex justify-end">
-        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <!-- body text -->
+      <p class="sc-text">All work carries a minimum 12-month workmanship guarantee — in writing, every time.</p>
+      <!-- arrow -->
+      <div class="sc-arrow-wrap" aria-hidden="true">
+        <svg class="sc-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </div>
-    </div><div class="standards-card reveal group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-sm p-7 flex flex-col gap-5 cursor-default" style="--i:5">
-      <!-- accent top line -->
-      <div class="standards-card-line absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div><div class="sc reveal group" style="--i:5">
+      <!-- top accent line: slides in from left on hover -->
+      <div class="sc-line"></div>
       <!-- watermark number -->
-      <span class="standards-num absolute -bottom-3 -right-2 font-display font-black text-[80px] leading-none text-white/[0.04] select-none pointer-events-none group-hover:text-white/[0.07] transition-colors duration-500">06</span>
-      <!-- icon badge -->
-      <div class="relative w-fit">
-        <div class="standards-icon w-10 h-10 rounded-xl flex items-center justify-center text-[var(--c-accent)] border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/10 group-hover:bg-[var(--c-accent)]/20 group-hover:border-[var(--c-accent)]/50 transition-all duration-300">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-        </div>
-        <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--c-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"></span>
+      <span class="sc-num" aria-hidden="true">06</span>
+      <!-- icon -->
+      <div class="sc-icon-wrap">
+        <div class="sc-icon"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+        <span class="sc-dot" aria-hidden="true"></span>
       </div>
-      <!-- text -->
-      <p class="relative text-white/55 text-sm leading-[1.75] group-hover:text-white/85 transition-colors duration-300">Full job documentation provided on completion — ideal for landlords and businesses.</p>
-      <!-- bottom arrow -->
-      <div class="mt-auto flex justify-end">
-        <svg class="w-4 h-4 text-white/15 group-hover:text-[var(--c-accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      <!-- body text -->
+      <p class="sc-text">Full job documentation provided on completion — ideal for landlords and businesses.</p>
+      <!-- arrow -->
+      <div class="sc-arrow-wrap" aria-hidden="true">
+        <svg class="sc-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </div>
     </div></div>
   </div>
 
   <style>
-    .standards-card { transition: transform 0.35s cubic-bezier(.16,1,.3,1), box-shadow 0.35s ease, border-color 0.3s; }
-    .standards-card:hover { transform: translateY(-5px); border-color: rgba(var(--c-accent-rgb, 129,140,248), 0.22); box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(var(--c-accent-rgb, 129,140,248), 0.12); }
+    /* ── Standards card system ─────────────────── */
+    .sc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px)  { .sc-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .sc-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    /* Card base */
+    .sc {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      cursor: default;
+      /* Single unified transition — everything moves together */
+      transition:
+        transform      500ms cubic-bezier(.25,.46,.45,.94),
+        box-shadow     500ms cubic-bezier(.25,.46,.45,.94),
+        border-color   500ms ease,
+        background     500ms ease;
+      will-change: transform;
+    }
+    @media (hover: hover) {
+      .sc:hover {
+        transform: translateY(-6px);
+        border-color: rgba(var(--c-accent-rgb), 0.28);
+        background: rgba(255,255,255,0.06);
+        box-shadow:
+          0 24px 64px rgba(0,0,0,0.32),
+          0 0 0 1px rgba(var(--c-accent-rgb), 0.14),
+          0 0 40px rgba(var(--c-accent-rgb), 0.06);
+      }
+    }
+
+    /* Top accent line — slides in from left */
+    .sc-line {
+      position: absolute;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--c-accent) 0%, rgba(var(--c-accent-rgb), 0.25) 100%);
+      transition: width 550ms cubic-bezier(.25,.46,.45,.94);
+    }
+    @media (hover: hover) {
+      .sc:hover .sc-line { width: 100%; }
+    }
+
+    /* Watermark number */
+    .sc-num {
+      position: absolute;
+      bottom: -8px; right: 4px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 88px;
+      line-height: 1;
+      color: rgba(255,255,255,0.038);
+      user-select: none;
+      pointer-events: none;
+      transition: color 500ms ease;
+    }
+    @media (hover: hover) {
+      .sc:hover .sc-num { color: rgba(255,255,255,0.065); }
+    }
+
+    /* Icon wrapper */
+    .sc-icon-wrap { position: relative; width: fit-content; }
+
+    .sc-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--c-accent);
+      border: 1px solid rgba(var(--c-accent-rgb), 0.22);
+      background: rgba(var(--c-accent-rgb), 0.08);
+      transition:
+        background  450ms ease,
+        border-color 450ms ease,
+        transform   450ms cubic-bezier(.34,1.56,.64,1);
+    }
+    @media (hover: hover) {
+      .sc:hover .sc-icon {
+        background: rgba(var(--c-accent-rgb), 0.18);
+        border-color: rgba(var(--c-accent-rgb), 0.5);
+        transform: scale(1.06);
+      }
+    }
+
+    /* Dot — fades + scales in (no ping) */
+    .sc-dot {
+      position: absolute;
+      top: -3px; right: -3px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--c-accent);
+      opacity: 0;
+      transform: scale(0.4);
+      transition: opacity 350ms ease, transform 350ms cubic-bezier(.34,1.56,.64,1);
+    }
+    @media (hover: hover) {
+      .sc:hover .sc-dot { opacity: 1; transform: scale(1); }
+    }
+
+    /* Body text */
+    .sc-text {
+      position: relative;
+      font-size: 0.875rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+      transition: color 450ms ease;
+      flex: 1;
+    }
+    @media (hover: hover) {
+      .sc:hover .sc-text { color: rgba(255,255,255,0.82); }
+    }
+
+    /* Arrow */
+    .sc-arrow-wrap { display: flex; justify-content: flex-end; margin-top: auto; }
+    .sc-arrow {
+      width: 15px; height: 15px;
+      color: rgba(255,255,255,0.12);
+      transition:
+        color     400ms ease,
+        transform 400ms cubic-bezier(.25,.46,.45,.94);
+    }
+    @media (hover: hover) {
+      .sc:hover .sc-arrow {
+        color: var(--c-accent);
+        transform: translate(3px, -3px);
+      }
+    }
   </style>
 </section>
 
@@ -611,7 +833,7 @@ nav a, nav button { min-height: unset; }
           <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400&q=80&auto=format" alt="Landscaping team" class="w-full h-full object-cover" loading="lazy">
         </div>
         <!-- Stat badge -->
-        <div class="absolute -top-4 -left-3 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
+        <div class="absolute -top-4 left-2 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
           <div class="text-xl sm:text-2xl font-bold font-display">500+</div>
           <div class="text-xs text-white/80">Jobs Done</div>
         </div>
@@ -746,34 +968,46 @@ nav a, nav button { min-height: unset; }
     </div>
 
     <div class="space-y-2.5 sm:space-y-3">
-      <div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:0">
+      <div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:0">
       <input type="checkbox" id="faq-0" class="faq-toggle hidden">
-      <label for="faq-0" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">What areas do you cover?</span>
+      <label for="faq-0" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">1</span>
+          <span class="font-semibold text-sm sm:text-base">What areas do you cover?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">We cover City Name and all surrounding areas within a 20-mile radius.</div>
-    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:1">
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">We cover City Name and all surrounding areas within a 20-mile radius.</div>
+    </div><div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:1">
       <input type="checkbox" id="faq-1" class="faq-toggle hidden">
-      <label for="faq-1" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">How quickly can you respond?</span>
+      <label for="faq-1" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">2</span>
+          <span class="font-semibold text-sm sm:text-base">How quickly can you respond?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">We aim to respond to all enquiries within one business hour and can often offer same-day appointments.</div>
-    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:2">
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">We aim to respond to all enquiries within one business hour and can often offer same-day appointments.</div>
+    </div><div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:2">
       <input type="checkbox" id="faq-2" class="faq-toggle hidden">
-      <label for="faq-2" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">Are your team insured and qualified?</span>
+      <label for="faq-2" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">3</span>
+          <span class="font-semibold text-sm sm:text-base">Are your team insured and qualified?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">Yes — all of our team members are fully insured, qualified and identity-checked before starting work.</div>
-    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:3">
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">Yes — all of our team members are fully insured, qualified and identity-checked before starting work.</div>
+    </div><div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:3">
       <input type="checkbox" id="faq-3" class="faq-toggle hidden">
-      <label for="faq-3" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">Do you offer free quotes?</span>
+      <label for="faq-3" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">4</span>
+          <span class="font-semibold text-sm sm:text-base">Do you offer free quotes?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">Absolutely. We provide free, no-obligation quotes for all jobs before any work begins.</div>
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">Absolutely. We provide free, no-obligation quotes for all jobs before any work begins.</div>
     </div>
     </div>
   </div>
@@ -848,43 +1082,44 @@ nav a, nav button { min-height: unset; }
       <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Simple, Transparent Pricing</h2>
       <p class="text-gray-500 mt-4 max-w-lg mx-auto">No hidden fees. No surprises. Just clear, upfront pricing.</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto"><div class="reveal  bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:0">
+    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto"><div class="reveal relative bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:0">
       
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Starter</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        <span class="text-sm text-gray-400">from</span>
-        <span class="font-display text-4xl font-bold">£X</span>
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ">Starter</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        <span class="text-base text-gray-400 font-medium">from</span>
+        <span class="font-display text-5xl font-bold tracking-tight">£X</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature one</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature two</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature three</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature four</li>
+      <ul class="space-y-3.5 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature one</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature two</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature three</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature four</li>
       </ul>
-      <a href="tel:+440000000000" class="bg-primary/5 text-primary hover:bg-primary/10 font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="tel:+440000000000" class="bg-gray-900 text-white hover:bg-gray-800 font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         Get Started
       </a>
-    </div><div class="reveal pricing-highlight relative bg-surface rounded-2xl p-8 border border-accent flex flex-col" style="--i:1">
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Popular</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        <span class="text-sm text-gray-400">from</span>
-        <span class="font-display text-4xl font-bold">£XX</span>
+    </div><div class="reveal pricing-highlight relative overflow-hidden bg-surface rounded-2xl p-8 border border-accent/60 flex flex-col" style="--i:1">
+      <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-accent to-accent/60 rounded-t-2xl"></div>
+      <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-accent/30 whitespace-nowrap">Most Popular</div>
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 mt-2">Popular</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        <span class="text-base text-gray-400 font-medium">from</span>
+        <span class="font-display text-5xl font-bold tracking-tight">£XX</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Everything in Starter</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature five</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature six</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature seven</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature eight</li>
+      <ul class="space-y-3.5 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Everything in Starter</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature five</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature six</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature seven</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature eight</li>
       </ul>
-      <a href="tel:+440000000000" class="bg-accent text-white shadow-lg shadow-accent/25 font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="tel:+440000000000" class="bg-accent text-white shadow-lg shadow-accent/25 hover:brightness-110 font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         Choose Popular
       </a>
-    </div><div class="reveal  bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:2">
+    </div><div class="reveal relative bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:2">
       
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Premium</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        <span class="text-sm text-gray-400">per year</span>
-        <span class="font-display text-4xl font-bold">£XXX</span>
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ">Premium</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        <span class="text-base text-gray-400 font-medium">per year</span>
+        <span class="font-display text-5xl font-bold tracking-tight">£XXX</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Everything in Popular</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature nine</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature ten</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Feature eleven</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Dedicated account manager</li>
+      <ul class="space-y-3.5 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Everything in Popular</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature nine</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature ten</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Feature eleven</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Dedicated account manager</li>
       </ul>
-      <a href="tel:+440000000000" class="bg-primary/5 text-primary hover:bg-primary/10 font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="tel:+440000000000" class="bg-gray-900 text-white hover:bg-gray-800 font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         Go Premium
       </a>
     </div></div>
@@ -903,41 +1138,49 @@ nav a, nav button { min-height: unset; }
       <p class="text-gray-500 mt-3 sm:mt-4 text-sm sm:text-base max-w-lg mx-auto">We're ready to help with all your landscaping needs in albertonne.</p>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
       <!-- Phone -->
-      <a href="tel:+440000000000" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:0">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+      <a href="tel:+440000000000" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:0">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Call Us</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">+44 000 000 0000</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Call Us</span>
+          <strong class="block text-sm font-semibold mt-0.5 break-all">+44 000 000 0000</strong>
+        </div>
       </a>
 
       <!-- Email -->
-      <a href="mailto:hello@yourdomain.co.uk" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:1">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+      <a href="mailto:hello@yourdomain.co.uk" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:1">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Email Us</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">hello@yourdomain.co.uk</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Email Us</span>
+          <strong class="block text-sm font-semibold mt-0.5 break-all">hello@yourdomain.co.uk</strong>
+        </div>
       </a>
 
       <!-- Area -->
-      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:2">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:2">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Area</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1">City Name, County/Region</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Service Area</span>
+          <strong class="block text-sm font-semibold mt-0.5">City Name, County/Region</strong>
+        </div>
       </div>
 
       <!-- Hours -->
-      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:3">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:3">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Hours</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1">Mo-Fr 08:00-18:00; Sa 09:00-14:00</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Hours</span>
+          <strong class="block text-sm font-semibold mt-0.5">Mo-Fr 08:00-18:00; Sa 09:00-14:00</strong>
+        </div>
       </div>
     </div>
   </div>

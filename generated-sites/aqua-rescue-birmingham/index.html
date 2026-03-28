@@ -146,7 +146,9 @@ body.nav-open { overflow: hidden; }
 
 /* ── Hero ──────────────────────────────────────── */
 .hero-overlay {
-  background: linear-gradient(160deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.2) 100%);
+  background:
+    linear-gradient(165deg, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.52) 48%, rgba(0,0,0,0.16) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 44%);
 }
 
 /* ── Mesh blob ─────────────────────────────────── */
@@ -169,9 +171,18 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ── Testimonial ───────────────────────────────── */
-.testi-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.testi-card { position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.testi-card::before {
+  content: '\201C';
+  position: absolute; top: -14px; right: 18px;
+  font-family: Georgia, serif; font-size: 128px; line-height: 1;
+  color: var(--c-accent); opacity: 0.07;
+  pointer-events: none; user-select: none;
+  transition: opacity 0.35s ease;
+}
 @media (hover: hover) {
-  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+  .testi-card:hover { transform: translateY(-5px); box-shadow: 0 22px 60px rgba(0,0,0,0.09); border-color: rgba(var(--c-accent-rgb), 0.22) !important; }
+  .testi-card:hover::before { opacity: 0.14; }
 }
 
 /* ── FAQ accordion ─────────────────────────────── */
@@ -205,8 +216,92 @@ body.nav-open { overflow: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
 
 /* ── Touch targets (min 44px) ──────────────────── */
-a, button, label[for] { min-height: 44px; }
-nav a, nav button { min-height: unset; }
+/* Apply only to actual buttons, not inline/footer anchors */
+button { min-height: 44px; }
+.burger { min-height: unset; }
+.drawer-link { min-height: 44px; }
+
+/* ── Global selection colour ───────────────────── */
+::selection { background: rgba(var(--c-accent-rgb),.22); color: inherit; }
+
+/* ── Trust strip fade edges (solid overlay technique) */
+#trust { position: relative; }
+#trust::before, #trust::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 72px; z-index: 2; pointer-events: none;
+}
+#trust::before { left:  0; background: linear-gradient(to right, var(--c-primary), transparent); }
+#trust::after  { right: 0; background: linear-gradient(to left,  var(--c-primary), transparent); }
+
+/* ── Service card shimmer sweep ────────────────── */
+.service-card { position: relative; overflow: hidden; }
+.service-card::after {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.075) 50%, transparent 80%);
+  transition: left 0.75s cubic-bezier(.25,.46,.45,.94);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .service-card:hover::after { left: 160%; }
+}
+
+/* ── Nav link underline indicator ──────────────── */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 2px; border-radius: 2px; background: var(--c-accent);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 0.22s cubic-bezier(.25,.46,.45,.94);
+}
+@media (hover: hover) {
+  .nav-link:hover::after { transform: scaleX(1); }
+}
+
+/* ── Contact card hover glow ───────────────────── */
+@media (hover: hover) {
+  .contact-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(var(--c-accent-rgb), 0.28) !important;
+    box-shadow: 0 18px 52px rgba(0,0,0,0.08), 0 0 0 1px rgba(var(--c-accent-rgb), 0.1) !important;
+  }
+}
+
+/* ── Hero stat numbers ─────────────────────────── */
+.hero-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ── Mobile refinements ─────────────────────────── */
+/* Snappier, shorter reveal on small screens */
+@media (max-width: 639px) {
+  .reveal { transform: translateY(14px); }
+  .reveal[style*="--i:3"] { transition-delay: .12s; }
+  .reveal[style*="--i:4"] { transition-delay: .15s; }
+  .reveal[style*="--i:5"] { transition-delay: .18s; }
+  /* Tighter section spacing on mobile */
+  .sc-grid { gap: 10px; }
+}
+
+/* iOS safe-area padding for floating buttons */
+@media (max-width: 480px) {
+  #floatCta {
+    font-size: 0.78rem; padding: 10px 14px;
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+    left: 16px;
+  }
+  #backToTop {
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+    right: 16px; width: 40px; height: 40px;
+  }
+}
+
+/* Prevent horizontal overflow from mesh blobs on mobile */
+@media (max-width: 639px) {
+  .mesh-blob { opacity: 0.1; }
+}
 </style>
 </head>
 <body class="antialiased">
@@ -727,7 +822,7 @@ nav a, nav button { min-height: unset; }
           <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400&q=80&auto=format" alt="Landscaping team" class="w-full h-full object-cover" loading="lazy">
         </div>
         <!-- Stat badge -->
-        <div class="absolute -top-4 -left-3 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
+        <div class="absolute -top-4 left-2 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
           <div class="text-xl sm:text-2xl font-bold font-display">500+</div>
           <div class="text-xs text-white/80">Jobs Done</div>
         </div>
@@ -861,27 +956,36 @@ nav a, nav button { min-height: unset; }
     </div>
 
     <div class="space-y-2.5 sm:space-y-3">
-      <div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:0">
+      <div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:0">
       <input type="checkbox" id="faq-0" class="faq-toggle hidden">
-      <label for="faq-0" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">Are your engineers Gas Safe registered and insured?</span>
+      <label for="faq-0" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">1</span>
+          <span class="font-semibold text-sm sm:text-base">Are your engineers Gas Safe registered and insured?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">Yes — all engineers carry Gas Safe ID and full public liability insurance on every visit.</div>
-    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:1">
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">Yes — all engineers carry Gas Safe ID and full public liability insurance on every visit.</div>
+    </div><div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:1">
       <input type="checkbox" id="faq-1" class="faq-toggle hidden">
-      <label for="faq-1" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">How quickly can you reach me in Birmingham?</span>
+      <label for="faq-1" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">2</span>
+          <span class="font-semibold text-sm sm:text-base">How quickly can you reach me in Birmingham?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">We aim to arrive within 60 minutes for all confirmed emergency callouts across Birmingham.</div>
-    </div><div class="reveal bg-surface rounded-xl border border-gray-100 overflow-hidden" style="--i:2">
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">We aim to arrive within 60 minutes for all confirmed emergency callouts across Birmingham.</div>
+    </div><div class="reveal bg-surface rounded-2xl border border-gray-100 overflow-hidden" style="--i:2">
       <input type="checkbox" id="faq-2" class="faq-toggle hidden">
-      <label for="faq-2" class="faq-label flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-        <span class="font-semibold text-sm pr-4">Is the repair work guaranteed?</span>
+      <label for="faq-2" class="faq-label flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 cursor-pointer hover:bg-gray-50/80 transition-colors gap-4">
+        <div class="flex items-center gap-3.5">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center font-display">3</span>
+          <span class="font-semibold text-sm sm:text-base">Is the repair work guaranteed?</span>
+        </div>
         <svg class="faq-chevron w-5 h-5 text-gray-400 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
       </label>
-      <div class="faq-body px-5 text-gray-500 text-sm leading-relaxed">All repairs carry a minimum 10-year workmanship guarantee — in writing, every time.</div>
+      <div class="faq-body px-5 sm:px-6 text-gray-500 text-sm leading-relaxed pl-[60px] sm:pl-[68px]">All repairs carry a minimum 10-year workmanship guarantee — in writing, every time.</div>
     </div>
     </div>
   </div>
@@ -956,43 +1060,44 @@ nav a, nav button { min-height: unset; }
       <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Simple, Transparent Pricing</h2>
       <p class="text-gray-500 mt-4 max-w-lg mx-auto">No hidden fees. No surprises. Just clear, upfront pricing.</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto"><div class="reveal  bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:0">
+    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto"><div class="reveal relative bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:0">
       
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Emergency Call-Out</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        <span class="text-sm text-gray-400">from</span>
-        <span class="font-display text-4xl font-bold">£99</span>
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ">Emergency Call-Out</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        <span class="text-base text-gray-400 font-medium">from</span>
+        <span class="font-display text-5xl font-bold tracking-tight">£99</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>1-hour response guarantee</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Licensed Gas Safe engineer</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Fixed-price repair</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>No call-out charge</li>
+      <ul class="space-y-3.5 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>1-hour response guarantee</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Licensed Gas Safe engineer</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Fixed-price repair</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>No call-out charge</li>
       </ul>
-      <a href="tel:+441215557700" class="bg-primary/5 text-primary hover:bg-primary/10 font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="tel:+441215557700" class="bg-gray-900 text-white hover:bg-gray-800 font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         Book Emergency
       </a>
-    </div><div class="reveal pricing-highlight relative bg-surface rounded-2xl p-8 border border-accent flex flex-col" style="--i:1">
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Priority Cover</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        <span class="text-sm text-gray-400">from</span>
-        <span class="font-display text-4xl font-bold">£199</span>
+    </div><div class="reveal pricing-highlight relative overflow-hidden bg-surface rounded-2xl p-8 border border-accent/60 flex flex-col" style="--i:1">
+      <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-accent to-accent/60 rounded-t-2xl"></div>
+      <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-accent/30 whitespace-nowrap">Most Popular</div>
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 mt-2">Priority Cover</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        <span class="text-base text-gray-400 font-medium">from</span>
+        <span class="font-display text-5xl font-bold tracking-tight">£199</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>30-minute response</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Priority dispatch queue</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>6-month workmanship warranty</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Free follow-up visit</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Compliance report included</li>
+      <ul class="space-y-3.5 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>30-minute response</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Priority dispatch queue</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>6-month workmanship warranty</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Free follow-up visit</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Compliance report included</li>
       </ul>
-      <a href="tel:+441215557700" class="bg-accent text-white shadow-lg shadow-accent/25 font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="tel:+441215557700" class="bg-accent text-white shadow-lg shadow-accent/25 hover:brightness-110 font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         Get Priority Cover
       </a>
-    </div><div class="reveal  bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:2">
+    </div><div class="reveal relative bg-surface rounded-2xl p-8 border border-gray-100 flex flex-col" style="--i:2">
       
-      <div class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Annual Contract</div>
-      <div class="flex items-baseline gap-1 mb-6">
-        <span class="text-sm text-gray-400">per year</span>
-        <span class="font-display text-4xl font-bold">£499</span>
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ">Annual Contract</div>
+      <div class="flex items-baseline gap-1 mb-7">
+        <span class="text-base text-gray-400 font-medium">per year</span>
+        <span class="font-display text-5xl font-bold tracking-tight">£499</span>
       </div>
-      <ul class="space-y-3 mb-8 flex-1">
-        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Unlimited emergency call-outs</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Annual boiler service included</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Dedicated account engineer</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Full compliance documentation</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Priority SMS updates</li>
+      <ul class="space-y-3.5 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Unlimited emergency call-outs</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Annual boiler service included</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Dedicated account engineer</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Full compliance documentation</li><li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Priority SMS updates</li>
       </ul>
-      <a href="tel:+441215557700" class="bg-primary/5 text-primary hover:bg-primary/10 font-semibold py-3 rounded-full text-center text-sm transition-all">
+      <a href="tel:+441215557700" class="bg-gray-900 text-white hover:bg-gray-800 font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         Get Annual Contract
       </a>
     </div></div>
@@ -1011,41 +1116,49 @@ nav a, nav button { min-height: unset; }
       <p class="text-gray-500 mt-3 sm:mt-4 text-sm sm:text-base max-w-lg mx-auto">We're ready to help with all your landscaping needs in Birmingham.</p>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
       <!-- Phone -->
-      <a href="tel:+441215557700" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:0">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+      <a href="tel:+441215557700" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:0">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Call Us</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">+44 121 555 7700</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Call Us</span>
+          <strong class="block text-sm font-semibold mt-0.5 break-all">+44 121 555 7700</strong>
+        </div>
       </a>
 
       <!-- Email -->
-      <a href="mailto:support@aquarescue.co.uk" class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100 hover:border-accent/20" style="--i:1">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+      <a href="mailto:support@aquarescue.co.uk" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:1">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Email Us</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">support@aquarescue.co.uk</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Email Us</span>
+          <strong class="block text-sm font-semibold mt-0.5 break-all">support@aquarescue.co.uk</strong>
+        </div>
       </a>
 
       <!-- Area -->
-      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:2">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:2">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Area</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1">Birmingham City Centre, West Midlands</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Service Area</span>
+          <strong class="block text-sm font-semibold mt-0.5">Birmingham City Centre, West Midlands</strong>
+        </div>
       </div>
 
       <!-- Hours -->
-      <div class="reveal group bg-surface rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all border border-gray-100" style="--i:3">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:3">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Hours</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1">Mo-Su 00:00-23:59</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Hours</span>
+          <strong class="block text-sm font-semibold mt-0.5">Mo-Su 00:00-23:59</strong>
+        </div>
       </div>
     </div>
   </div>

@@ -285,7 +285,7 @@ export function renderTwPricingSection(pricing: PricingTier[] | undefined, ctaUr
         <span class="font-display text-5xl font-bold tracking-tight">${escapeHtml(tier.price)}</span>
       </div>
       <ul class="space-y-3.5 mb-8 flex-1">
-        ${tier.features.map(f => `<li class="flex items-start gap-3 text-sm text-gray-600"><svg class="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>${escapeHtml(f)}</li>`).join('')}
+        ${tier.features.map(f => `<li class="flex items-start gap-2.5 text-sm text-gray-600"><svg class="w-4 h-4 text-accent shrink-0 mt-0.5" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>${escapeHtml(f)}</li>`).join('')}
       </ul>
       <a href="${escapeHtml(ctaUrl)}" class="${hl ? 'bg-accent text-white shadow-lg shadow-accent/25 hover:brightness-110' : 'bg-gray-900 text-white hover:bg-gray-800'} font-semibold py-3.5 rounded-full text-center text-sm transition-all">
         ${escapeHtml(tier.cta ?? 'Get Started')}
