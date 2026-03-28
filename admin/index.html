@@ -1011,12 +1011,7 @@ async function generate() {
 }
 
 function triggerDownload(id) {
-  const a = document.createElement('a');
-  a.href = `/api/download/${id}`;
-  a.download = `${id}.html`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  window.location.href = `/api/download/${id}`;
 }
 
 async function downloadSite() {
