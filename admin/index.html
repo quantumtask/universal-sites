@@ -183,6 +183,17 @@ main{background-image:radial-gradient(circle,rgba(148,163,184,.22) 1px,transpare
 .btn-new{background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(129,140,248,.08));border-color:rgba(99,102,241,.25)!important}
 .btn-new:hover{background:linear-gradient(135deg,rgba(99,102,241,.28),rgba(129,140,248,.15));color:#c7d2fe}
 
+/* ── Text style picker ──────────────────────────── */
+.ts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;margin-top:12px}
+.ts-card{border-radius:10px;padding:13px 14px;cursor:pointer;border:2px solid var(--border);background:var(--card);transition:.18s;position:relative;user-select:none}
+.ts-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(99,102,241,.12)}
+.ts-card.selected{border-color:var(--accent);background:var(--accent-soft)}
+.ts-card.selected::after{content:'✓';position:absolute;top:7px;right:10px;font-size:11px;color:var(--accent);font-weight:700}
+.ts-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.ts-heading{font-size:15px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:2px}
+.ts-body{font-size:12px;color:var(--muted)}
+.ts-fonts{font-size:10px;color:#94a3b8;margin-top:7px;padding-top:7px;border-top:1px solid var(--border);line-height:1.5}
+
 /* ── Niche picker ───────────────────────────────── */
 .niche-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:4px}
 .niche-card{border-radius:10px;padding:14px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;border:2px solid transparent;transition:.2s;position:relative;min-height:88px;justify-content:center;user-select:none}
@@ -595,7 +606,17 @@ function tabContent() {
 }
 
 /* ── TAB: Theme ────────────────────────────────────── */
+const TEXT_STYLES = [
+  { id:'modern',   name:'Modern',   heading:'Space Grotesk', body:'Inter',            desc:'The default — sharp & contemporary',   sample:'Aa' },
+  { id:'elegant',  name:'Elegant',  heading:'DM Serif',      body:'DM Sans',          desc:'Refined serifs with clean body copy',  sample:'Aa' },
+  { id:'classic',  name:'Classic',  heading:'Playfair',      body:'Source Sans 3',    desc:'Editorial, trustworthy & timeless',    sample:'Aa' },
+  { id:'bold',     name:'Bold',     heading:'Bebas Neue',    body:'Inter',            desc:'Strong condensed headings, impact',    sample:'AA' },
+  { id:'friendly', name:'Friendly', heading:'Nunito',        body:'Nunito',           desc:'Rounded, warm & approachable',         sample:'Aa' },
+  { id:'luxury',   name:'Luxury',   heading:'Cormorant',     body:'Jost',             desc:'High-end feel, wide tracking',         sample:'Aa' },
+  { id:'minimal',  name:'Minimal',  heading:'Plus Jakarta',  body:'Plus Jakarta Sans', desc:'Single family, clean hierarchy',      sample:'Aa' },
+];
 function tabTheme() {
+  const current = gp('text_style') || 'modern';
   const cols = [
     {k:'primary',   l:'Primary',    h:'Dark background — nav, footer, standard cards'},
     {k:'secondary', l:'Secondary',  h:'Buttons, hover states, accents'},
@@ -614,6 +635,18 @@ function tabTheme() {
   ];
 
   return `
+  <div class="card">
+    <div class="card-title">Text Style</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Choose a font pairing for headings &amp; body text. Applied when you generate the site.</p>
+    <div class="ts-grid">
+      ${TEXT_STYLES.map(s => `<div class="ts-card${current===s.id?' selected':''}" onclick="selectTextStyle('${s.id}')">
+        <div class="ts-name">${s.name}</div>
+        <div class="ts-heading">${s.sample} ${s.heading}</div>
+        <div class="ts-body">${s.body}</div>
+        <div class="ts-fonts">${s.desc}</div>
+      </div>`).join('')}
+    </div>
+  </div>
   <div class="card">
     <div class="card-title">Colour Scheme</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Click a swatch to open the colour picker. Or type a hex code directly.</p>
@@ -657,6 +690,13 @@ function applyPreset(p) {
   data.theme_colors = {primary:p.p,secondary:p.s,accent:p.a,background:p.bg,text:p.t,surface:p.su};
   renderTab('theme');
   toast('Preset applied — hit Save to keep it','info');
+}
+function selectTextStyle(id) {
+  sp('text_style', id);
+  document.querySelectorAll('.ts-card').forEach(el => {
+    el.classList.toggle('selected', el.getAttribute('onclick') === `selectTextStyle('${id}')`);
+  });
+  toast('Text style updated — hit Save to keep it', 'info');
 }
 
 /* ── TAB: Images ───────────────────────────────────── */

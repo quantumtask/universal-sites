@@ -97,6 +97,9 @@ export interface ClientSiteConfig {
     footer_bg?: string;
   };
 
+  // typography style preset key (see TEXT_STYLES in template.ts)
+  text_style?: string;
+
   // social media profile URLs (all optional — hidden if empty)
   social?: {
     facebook?:  string;

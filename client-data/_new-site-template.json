@@ -96,6 +96,8 @@
   "hero_cta_text": "Get a Free Quote",
   "hero_cta_url": "tel:+440000000000",
 
+  "text_style": "modern",
+
   "theme_colors": {
     "primary":    "#0e3d60",
     "secondary":  "#1978a8",

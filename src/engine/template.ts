@@ -1,5 +1,36 @@
 import { ClientSiteConfig, PricingTier, GalleryItem } from '../types';
 
+/* ── Typography style presets ───────────────────────────────────────────── */
+export const TEXT_STYLES = {
+  modern:   { label: 'Modern',   body: 'Inter',             display: 'Space Grotesk',      bodyW: '400;500;600;700;800',   displayW: '500;600;700'   },
+  elegant:  { label: 'Elegant',  body: 'DM Sans',           display: 'DM Serif Display',   bodyW: '400;500;600',           displayW: '400;500'       },
+  classic:  { label: 'Classic',  body: 'Source Sans 3',     display: 'Playfair Display',   bodyW: '400;600;700',           displayW: '700;800'       },
+  bold:     { label: 'Bold',     body: 'Inter',             display: 'Bebas Neue',         bodyW: '400;500;600;700',       displayW: '400'           },
+  friendly: { label: 'Friendly', body: 'Nunito',            display: 'Nunito',             bodyW: '400;500;600;700;800',   displayW: '800;900'       },
+  luxury:   { label: 'Luxury',   body: 'Jost',              display: 'Cormorant Garamond', bodyW: '300;400;500;600',       displayW: '500;600;700'   },
+  minimal:  { label: 'Minimal',  body: 'Plus Jakarta Sans', display: 'Plus Jakarta Sans',  bodyW: '400;500;600;700',       displayW: '700;800'       },
+} as const;
+
+function buildFontAssets(styleId: string) {
+  const s = TEXT_STYLES[(styleId as keyof typeof TEXT_STYLES)] ?? TEXT_STYLES.modern;
+  const bodySlug    = s.body.replace(/ /g, '+');
+  const displaySlug = s.display.replace(/ /g, '+');
+
+  let families: string;
+  if (bodySlug === displaySlug) {
+    const weights = [...new Set([...s.bodyW.split(';'), ...s.displayW.split(';')])].sort().join(';');
+    families = `family=${bodySlug}:wght@${weights}`;
+  } else {
+    families = `family=${bodySlug}:wght@${s.bodyW}&family=${displaySlug}:wght@${s.displayW}`;
+  }
+
+  return {
+    fontLink: `<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?${families}&display=swap" rel="stylesheet">`,
+    fontFamilyConfig: `fontFamily: {\n        sans:    ['${s.body}', 'system-ui', 'sans-serif'],\n        display: ['${s.display}', '${s.body}', 'sans-serif'],\n      },`,
+    bodyFont: s.body,
+  };
+}
+
 export function escapeHtml(value: string): string {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -601,6 +632,7 @@ export function renderTemplate(template: string, config: ClientSiteConfig, style
   const pr = hexToRgb(theme.primary);
   const sr = hexToRgb(theme.secondary);
   const ar = hexToRgb(theme.accent);
+  const { fontLink, fontFamilyConfig, bodyFont } = buildFontAssets(config.text_style ?? 'modern');
 
   // Full theme override — MUST come last to win the CSS cascade
   const themeOverride = [
@@ -625,6 +657,7 @@ export function renderTemplate(template: string, config: ClientSiteConfig, style
     `  --primary-dark:  ${theme.primary};`,
     `  --secondary:     ${theme.secondary};`,
     `  --primary-color: ${theme.accent};`,
+    `  --font-body:     '${bodyFont}';`,
     '}',
   ].join('\n');
 
@@ -640,6 +673,8 @@ export function renderTemplate(template: string, config: ClientSiteConfig, style
     'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1920&q=85&auto=format';
 
   const values: Record<string, string> = {
+    font_link:          fontLink,
+    font_family_config: fontFamilyConfig,
     locale:        metadata.locale ?? 'en-GB',
     title:         metadata.title ?? `${config.business_name} | ${config.niche} in ${config.city}`,
     description:   metadata.description ?? config.about_text,

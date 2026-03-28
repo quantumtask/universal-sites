@@ -12,9 +12,7 @@
 <meta property="og:image" content="{{og_image}}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{{og_image}}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+{{font_link}}
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -28,10 +26,7 @@ tailwind.config = {
         txt:       'var(--c-text)',
         surface:   'var(--c-surface)',
       },
-      fontFamily: {
-        sans:    ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'sans-serif'],
-      },
+      {{font_family_config}}
     },
   },
 }
@@ -51,7 +46,7 @@ tailwind.config = {
 
 /* ── Base ──────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-html { font-family: 'Inter', system-ui, sans-serif; -webkit-text-size-adjust: 100%; }
+html { font-family: var(--font-body, 'Inter'), system-ui, sans-serif; -webkit-text-size-adjust: 100%; }
 body { color: var(--c-text); background: var(--c-bg); overflow-x: hidden; }
 img { max-width: 100%; height: auto; }
 
