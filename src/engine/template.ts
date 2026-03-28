@@ -307,10 +307,10 @@ export function renderTwPricingSection(pricing: PricingTier[] | undefined, ctaUr
 
   const tiers = pricing.map((tier, i) => {
     const hl = tier.highlight;
-    return `<div class="reveal ${hl ? 'pricing-highlight relative overflow-hidden' : 'relative'} bg-surface rounded-2xl p-8 border ${hl ? 'border-accent/60' : 'border-gray-100'} flex flex-col" style="--i:${i}">
+    return `<div class="reveal ${hl ? 'pricing-highlight relative' : 'relative'} bg-surface rounded-2xl p-8 border ${hl ? 'border-accent/60' : 'border-gray-100'} flex flex-col ${hl ? 'pt-10' : ''}" style="--i:${i}">
       ${hl ? `<div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-accent to-accent/60 rounded-t-2xl"></div>
-      <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-accent/30 whitespace-nowrap">Most Popular</div>` : ''}
-      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ${hl ? 'mt-2' : ''}">${escapeHtml(tier.tier)}</div>
+      <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-accent/30 whitespace-nowrap">Most Popular</div>` : ''}
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">${escapeHtml(tier.tier)}</div>
       <div class="flex items-baseline gap-1 mb-7">
         ${tier.unit ? `<span class="text-base text-gray-400 font-medium">${escapeHtml(tier.unit)}</span>` : ''}
         <span class="font-display text-5xl font-bold tracking-tight">${escapeHtml(tier.price)}</span>
