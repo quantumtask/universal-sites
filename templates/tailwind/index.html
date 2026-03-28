@@ -216,8 +216,10 @@ body.nav-open { overflow: hidden; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
 
 /* ── Touch targets (min 44px) ──────────────────── */
-a, button, label[for] { min-height: 44px; }
-nav a, nav button { min-height: unset; }
+/* Apply only to actual buttons, not inline/footer anchors */
+button { min-height: 44px; }
+.burger { min-height: unset; }
+.drawer-link { min-height: 44px; }
 
 /* ── Global selection colour ───────────────────── */
 ::selection { background: rgba(var(--c-accent-rgb),.22); color: inherit; }
@@ -270,6 +272,35 @@ nav a, nav button { min-height: unset; }
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+/* ── Mobile refinements ─────────────────────────── */
+/* Snappier, shorter reveal on small screens */
+@media (max-width: 639px) {
+  .reveal { transform: translateY(14px); }
+  .reveal[style*="--i:3"] { transition-delay: .12s; }
+  .reveal[style*="--i:4"] { transition-delay: .15s; }
+  .reveal[style*="--i:5"] { transition-delay: .18s; }
+  /* Tighter section spacing on mobile */
+  .sc-grid { gap: 10px; }
+}
+
+/* iOS safe-area padding for floating buttons */
+@media (max-width: 480px) {
+  #floatCta {
+    font-size: 0.78rem; padding: 10px 14px;
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+    left: 16px;
+  }
+  #backToTop {
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+    right: 16px; width: 40px; height: 40px;
+  }
+}
+
+/* Prevent horizontal overflow from mesh blobs on mobile */
+@media (max-width: 639px) {
+  .mesh-blob { opacity: 0.1; }
 }
 </style>
 </head>
@@ -493,7 +524,7 @@ nav a, nav button { min-height: unset; }
           <img src="{{about_img_small}}" alt="{{niche}} team" class="w-full h-full object-cover" loading="lazy">
         </div>
         <!-- Stat badge -->
-        <div class="absolute -top-4 -left-3 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
+        <div class="absolute -top-4 left-2 sm:-left-5 bg-accent text-white rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 shadow-lg">
           <div class="text-xl sm:text-2xl font-bold font-display">{{jobs_count}}</div>
           <div class="text-xs text-white/80">Jobs Done</div>
         </div>
@@ -676,41 +707,49 @@ nav a, nav button { min-height: unset; }
       <p class="text-gray-500 mt-3 sm:mt-4 text-sm sm:text-base max-w-lg mx-auto">We're ready to help with all your {{niche_lower}} needs in {{city}}.</p>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
       <!-- Phone -->
-      <a href="tel:{{phone_tel}}" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:0">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+      <a href="tel:{{phone_tel}}" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:0">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.49-5.49A19.79 19.79 0 013.07 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.13.81.36 1.58.65 2.32a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.29 1.51.52 2.32.65A2 2 0 0122 16.92z"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Call Us</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">{{phone}}</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Call Us</span>
+          <strong class="block text-sm font-semibold mt-0.5 break-all">{{phone}}</strong>
+        </div>
       </a>
 
       <!-- Email -->
-      <a href="mailto:{{email}}" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:1">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
+      <a href="mailto:{{email}}" class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:1">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4 group-hover:bg-accent group-hover:text-white transition-all">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Email Us</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1 break-all">{{email}}</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Email Us</span>
+          <strong class="block text-sm font-semibold mt-0.5 break-all">{{email}}</strong>
+        </div>
       </a>
 
       <!-- Area -->
-      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:2">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:2">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Area</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1">{{address}}</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Service Area</span>
+          <strong class="block text-sm font-semibold mt-0.5">{{address}}</strong>
+        </div>
       </div>
 
       <!-- Hours -->
-      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 text-center transition-all border border-gray-100" style="--i:3">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+      <div class="reveal contact-card group bg-surface rounded-2xl p-4 sm:p-6 flex sm:block items-center gap-4 transition-all border border-gray-100" style="--i:3">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-accent/10 text-accent flex items-center justify-center shrink-0 sm:mx-auto sm:mb-4">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <span class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Hours</span>
-        <strong class="block text-xs sm:text-sm font-semibold mt-1">{{opening_hours}}</strong>
+        <div class="sm:text-center min-w-0">
+          <span class="text-xs text-gray-400 uppercase tracking-wider block">Hours</span>
+          <strong class="block text-sm font-semibold mt-0.5">{{opening_hours}}</strong>
+        </div>
       </div>
     </div>
   </div>
