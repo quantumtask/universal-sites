@@ -5,7 +5,7 @@ import { execSync } from 'child_process';
 
 const app  = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = process.cwd();
 const DATA = path.join(ROOT, 'client-data');
 
 app.use(express.json({ limit: '20mb' }));
